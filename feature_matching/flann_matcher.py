@@ -5,13 +5,13 @@ import sys
 sys.path.append(os.path.abspath("./"))
 from load_h5py_files import load_sift_output
 
-def convert_result_into_opencv(feature):
-    desc = feature[0].descriptors
+def convert_result_into_opencv(ft):
+    desc = ft["feature"][0].descriptors
     desc_np = desc.cpu().detach().numpy().astype("float32")
-    kps = feature[0].keypoints
+    kps = ft["feature"][0].keypoints
     kps_np = [cv.KeyPoint(x=float(x), y=float(y), size=1) for x,y in kps.cpu().numpy()]
     features_np = {
-        "image_name": feature["image_name"],
+        "image_name": ft["image_name"],
         "keypoints": kps_np,
         "descriptors": desc_np
     }
@@ -42,11 +42,11 @@ def flann_matcher(i, j, descriptors_filepath, images_name=None, descriptor="sift
         _, _, desc1 = load_sift_output(descriptors_filepath, images_name[i])
         _, _, desc2 = load_sift_output(descriptors_filepath, images_name[j])
     elif descriptor == "disk":
-        desc1 = torch.load(descriptors_filepath, weights_only=False)[i]
-        desc2 = torch.load(descriptors_filepath, weights_olny=False)[j]
+        desc1_disk = torch.load(descriptors_filepath, weights_only=False)[i]
+        desc2_disk = torch.load(descriptors_filepath, weights_only=False)[j]
 
-        desc1_np = convert_result_into_opencv(desc1)["descriptors"]
-        desc2_np = convert_result_into_opencv(desc2)["descriptors"]
+        desc1 = convert_result_into_opencv(desc1_disk)["descriptors"]
+        desc2 = convert_result_into_opencv(desc2_disk)["descriptors"]
 
     matches = flann.knnMatch(desc1, desc2, k=2)
     # Ratio test

@@ -1,6 +1,7 @@
 from feature_matching.LightGlue.lightglue import LightGlue, SuperPoint, DISK, SIFT, ALIKED, DoGHardNet
 from feature_matching.LightGlue.lightglue.utils import load_image, rbd
 from typing import Literal
+import pandas as pd
 
 def get_SIFT_features(image_location, cuda=False, max_keypoints=2048) -> dict:
     if cuda:
@@ -39,5 +40,5 @@ def match_features(image0_features: dict, image1_features: dict, descriptor: Lit
     points0 = image0_features['keypoints'][matches[..., 0]]  # coordinates in image #0, shape (K,2)
     points1 = image1_features['keypoints'][matches[..., 1]]  # coordinates in image #1, shape (K,2)from lightglue import LightGlue, SuperPoint, DISK, SIFT, ALIKED, DoGHardNet
 
-    return points0, points1
+    return points0, points1, matches01
 

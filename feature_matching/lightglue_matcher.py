@@ -28,7 +28,7 @@ def get_DISK_features(image_location, cuda=False, max_keypoints=2048) -> dict:
     return feats
 
 
-def match_features(image0_features: dict, image1_features: dict, descriptor: Literal['disk', 'sift', 'aliked', 'superpoint', 'doghardnet'], cuda=False):
+def match_features_for_plots(image0_features: dict, image1_features: dict, descriptor: Literal['disk', 'sift', 'aliked', 'superpoint', 'doghardnet'], cuda=False):
     if cuda:
         matcher = LightGlue(features=descriptor.lower()).eval().cuda()  # load the matcher
     else:
@@ -42,3 +42,16 @@ def match_features(image0_features: dict, image1_features: dict, descriptor: Lit
 
     return points0, points1, matches01
 
+def match_features(image0_features: dict, image1_features: dict, descriptor: Literal['disk', 'sift', 'aliked', 'superpoint', 'doghardnet'], cuda=False):
+    if cuda:
+        matcher = LightGlue(features=descriptor.lower()).eval().cuda()  # load the matcher
+    else:
+        matcher = LightGlue(features=descriptor.lower()).eval()  # load the matcher
+
+    matches01 = matcher({'image0': image0_features, 'image1': image1_features})
+    image0_features, image1_features, matches01 = [rbd(x) for x in [image0_features, image1_features, matches01]]  # remove batch dimension
+    matches = matches01['matches']  # indices with shape (K,2)
+    points0 = image0_features['keypoints'][matches[..., 0]]  # coordinates in image #0, shape (K,2)
+    points1 = image1_features['keypoints'][matches[..., 1]]  # coordinates in image #1, shape (K,2)from lightglue import LightGlue, SuperPoint, DISK, SIFT, ALIKED, DoGHardNet
+
+    return points0, points1

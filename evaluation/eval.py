@@ -30,6 +30,7 @@ def evaluate_clusters(clusters: Dict[int, List[str]], labels_path: str) -> Dict:
         
         for cluster_id, cluster_images in clusters.items():
             cluster_image_set = set(cluster_images)
+            print(cluster_image_set)
             
             # Calculate mAA (recall)
             common_images = len(scene_images.intersection(cluster_image_set))
@@ -43,7 +44,7 @@ def evaluate_clusters(clusters: Dict[int, List[str]], labels_path: str) -> Dict:
                 'mAA': mAA,
                 'clustering_score': clustering_score
             })
-    
+
     # Greedy assignment of scenes to best clusters
     scene_assignments = {}
     for scene in scene_sizes.index:

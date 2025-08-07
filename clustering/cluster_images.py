@@ -57,13 +57,15 @@ def graph_clustering(G, threshold=None):
         if alpha < 3:
             alpha = 3
     
-    clusters = []
-    outliers = []
+    clusters = {}
+    outliers = {}
 
     for idx, com in enumerate(communities):
         if len(com) >= alpha:
-            clusters.append({idx : com})
+            clusters[idx] = list(com)
+            # clusters.append({idx : com})
         else:
-            outliers.append({idx : com})
+            outliers[idx] = list(com)
+            # outliers.append({idx : com})
     
     return clusters, outliers

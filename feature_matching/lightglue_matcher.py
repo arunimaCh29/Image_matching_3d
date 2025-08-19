@@ -15,9 +15,9 @@ def get_SIFT_features(image_location, cuda=False, max_keypoints=2048) -> dict:
 
     return feats
 
-def get_DISK_features(image, cuda=False, max_keypoints=2048, device= None) -> dict:
-    if device:
-        extractor = DISK(max_num_keypoints=max_keypoints).eval().to(device)  # load the extractor
+def get_DISK_features(image, cuda=False, max_keypoints=2048) -> dict:
+    if cuda:
+        extractor = DISK(max_num_keypoints=max_keypoints).eval().cuda()  # load the extractor
         #image = load_image(image_location).cuda()
     else:
         extractor = DISK(max_num_keypoints=max_keypoints).eval()  # load the extractor

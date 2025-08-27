@@ -32,10 +32,10 @@ def get_DISK_features(image, cuda=False, max_keypoints=2048, device= None) -> di
 def match_features_for_plots(image0_features: dict, image1_features: dict, descriptor: Literal['disk', 'sift', 'aliked', 'superpoint', 'doghardnet'], cuda=False, device=None):
     if device:
         matcher = LightGlue(features=descriptor.lower()).eval().to(device)  # load the matcher
+        #print(device)
     else:
         matcher = LightGlue(features=descriptor.lower()).eval()  # load the matcher
 
-    print(device)
     matches01 = matcher({'image0': image0_features, 'image1': image1_features})
     image0_features, image1_features, matches01 = [rbd(x) for x in [image0_features, image1_features, matches01]]  # remove batch dimension
     matches = matches01['matches']  # indices with shape (K,2)

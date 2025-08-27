@@ -97,7 +97,7 @@ def save_matches_to_h5(matches_list, output_path, matcher_type):
                 group.create_dataset('mask2', data=match_data['features2']['keypoints_mask'].numpy())
             
             if matcher_type == 'lightglue':
-                group.create_dataset('matches', data=match_data['matches'].numpy())
+                group.create_dataset('matches', data=match_data['matches'])
             elif matcher_type == 'flann':
                 group.create_dataset('matches_idx', data=match_data['matches_idx'].numpy())
                 group.create_dataset('distances', data=match_data['distances'].numpy())
@@ -109,10 +109,11 @@ def load_matches_from_h5(h5_path):
     matches_list = []
     
     with h5py.File(h5_path, 'r') as f:
-        matcher_type = f.attrs['matcher']
+        matcher_type = 'lightglue'
         
         for idx in f.keys():
             group = f[idx]
+            print(f[idx])
             
             # Load basic data
             match_data = {
@@ -137,7 +138,7 @@ def load_matches_from_h5(h5_path):
             
             # Load matcher-specific data
             if matcher_type == 'lightglue':
-                match_data['matches'] = torch.from_numpy(group['matches'][()])
+                match_data['matches'] ='d'# group['matches']
             else:  # flann
                 match_data['matches_idx'] = torch.from_numpy(group['matches_idx'][()])
                 match_data['distances'] = torch.from_numpy(group['distances'][()])

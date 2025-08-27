@@ -65,7 +65,8 @@ class PseudoMatchingDataset(Dataset):
             features = {
                 'keypoints': torch.from_numpy(f['keypoints'][idx]),
                 'descriptors': torch.from_numpy(f['descriptors'][idx]),
-                'scene': f['scene_name'][idx][:].decode('utf-8')
+                'scene': f['scene_name'][idx][:].decode('utf-8'),
+                'image': torch.from_numpy(f['image'][idx]),
             }
             
             if self._has_scores:

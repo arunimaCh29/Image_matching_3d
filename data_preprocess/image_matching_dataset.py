@@ -56,6 +56,9 @@ class ImageMatchingDataset(Dataset):
         # Get image path and load image
         img_path = self.image_paths[idx]
         image = Image.open(img_path).convert('RGB')
+
+        width, height = image.size
+        image_size = torch.tensor([width, height], dtype=torch.float32)
         
         if self.transform:
             image = self.transform(image)
@@ -72,6 +75,8 @@ class ImageMatchingDataset(Dataset):
         
         if translation_vector is not None:
             translation_vector = translation_vector.reshape(3, 1)
+
+
             
         item = {
             'image': image,
@@ -79,6 +84,7 @@ class ImageMatchingDataset(Dataset):
             'scene_name': label_row['scene'],
             'image_name': label_row['image'],
             'image_path': str(img_path),
+            'image_size': image_size,
             'rotation_matrix': rotation_matrix,
             'translation_vector': translation_vector
         }

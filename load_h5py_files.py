@@ -1,6 +1,8 @@
 import h5py
 import cv2 as cv
 import numpy as np
+import torch
+from pathlib import Path
 
 def load_sift_output(filepath, img_name):
     with h5py.File(filepath, "r") as f:
@@ -65,7 +67,7 @@ def save_matches_to_h5(matches_list, output_path, matcher_type):
     output_path.parent.mkdir(exist_ok=True, parents=True)
     
     with h5py.File(output_path, 'w') as f:
-        f.attrs['matcher'] = matcher_type
+        #f.attrs['matcher'] = matcher_type
         dt = h5py.string_dtype(encoding='utf-8')
         
         for idx, match_data in enumerate(matches_list):

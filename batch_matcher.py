@@ -7,8 +7,7 @@ from feature_matching.lightglue_matcher import match_features_for_plots
 import cv2 as cv
 import numpy as np
 from load_h5py_files import save_matches_to_h5
-
-
+import torch
 
 
 
@@ -75,6 +74,7 @@ def process_batches(loader, matcher='lightglue', output_path=None):
         
         batch_matches = []
         for i in range(len(batch['image1'])):
+            descriptor_type = batch["descriptor_type"][i]
             if matcher == 'lightglue':
                 # Prepare features for LightGlue (already on correct device from dataset)
                 feats0 = {
@@ -162,10 +162,12 @@ def process_batches(loader, matcher='lightglue', output_path=None):
         all_matches.extend(batch_matches)
         
         # Optional: Save periodically
-        if (batch_idx + 1) % 10 == 0:
+        if (batch_idx + 1) % 10 == 0 or (batch_idx + 1) == len(loader):
             print(f"Saving checkpoint after batch {batch_idx+1}")
-            save_matches_to_h5(all_matches, output_path, matcher)
+            filename = output_path / f"{batch_idx+1}_{matcher}_{descriptor_type}.h5"
+            save_matches_to_h5(all_matches, filename, matcher)
+            all_matches = []
     
     # Final save
-    save_matches_to_h5(all_matches, output_path, matcher)
+    # save_matches_to_h5(all_matches, output_path, matcher)
     return all_matches

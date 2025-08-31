@@ -4,6 +4,7 @@ from collections import defaultdict
 import os
 import community as community_louvain
 from pyvis.network import Network
+import ast
 
 def build_graph(matches_df, labels_df, matcher):
     dataset_name = matches_df["dataset"].unique()
@@ -23,8 +24,8 @@ def build_graph(matches_df, labels_df, matcher):
             image2 = row["image2"]
             if matcher == "flann":
                 matches = np.array(ast.literal_eval(row["matches_idx"]))
-            elif matcher == "lightglue:
-                matches = np.array(ast.literal_eval(row["matches"])
+            elif matcher == "lightglue":
+                matches = np.array(ast.literal_eval(row["matches"]))
                                    
             if row["filtered_points0"] is None and row["filtered_points1"] is None and row["ransac_mask"] is None:
                 continue
@@ -84,7 +85,7 @@ def graph_clustering(graphs, threshold=None):
         for k, v in communities.items():
             inverted_communities[v].append(k)
         
-        len_communities = [len(inverted[c]) for c in inverted_communities]
+        len_communities = [len(inverted_communities[c]) for c in inverted_communities]
 
         if threshold is not None:
             alpha = threshold

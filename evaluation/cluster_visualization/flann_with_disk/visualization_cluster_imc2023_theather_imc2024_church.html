@@ -1,0 +1,155 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 750px;
+                 background-color: #222222;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "hsl(0, 70%, 50%)", "font": {"color": "white"}, "id": "church_00020.png", "label": "0", "shape": "dot", "title": "church_00020.png"}, {"color": "hsl(50, 70%, 50%)", "font": {"color": "white"}, "id": "church_00046.png", "label": "1", "shape": "dot", "title": "church_00046.png"}, {"color": "hsl(100, 70%, 50%)", "font": {"color": "white"}, "id": "church_00080.png", "label": "2", "shape": "dot", "title": "church_00080.png"}, {"color": "hsl(150, 70%, 50%)", "font": {"color": "white"}, "id": "church_00063.png", "label": "3", "shape": "dot", "title": "church_00063.png"}, {"color": "hsl(0, 70%, 50%)", "font": {"color": "white"}, "id": "church_00045.png", "label": "0", "shape": "dot", "title": "church_00045.png"}, {"color": "hsl(100, 70%, 50%)", "font": {"color": "white"}, "id": "church_00071.png", "label": "2", "shape": "dot", "title": "church_00071.png"}, {"color": "hsl(0, 70%, 50%)", "font": {"color": "white"}, "id": "church_00039.png", "label": "0", "shape": "dot", "title": "church_00039.png"}, {"color": "hsl(100, 70%, 50%)", "font": {"color": "white"}, "id": "church_00069.png", "label": "2", "shape": "dot", "title": "church_00069.png"}, {"color": "hsl(250, 70%, 50%)", "font": {"color": "white"}, "id": "church_00026.png", "label": "5", "shape": "dot", "title": "church_00026.png"}, {"color": "hsl(50, 70%, 50%)", "font": {"color": "white"}, "id": "church_00038.png", "label": "1", "shape": "dot", "title": "church_00038.png"}, {"color": "hsl(350, 70%, 50%)", "font": {"color": "white"}, "id": "church_00110.png", "label": "7", "shape": "dot", "title": "church_00110.png"}, {"color": "hsl(40, 70%, 50%)", "font": {"color": "white"}, "id": "church_00017.png", "label": "8", "shape": "dot", "title": "church_00017.png"}, {"color": "hsl(0, 70%, 50%)", "font": {"color": "white"}, "id": "church_00035.png", "label": "0", "shape": "dot", "title": "church_00035.png"}, {"color": "hsl(50, 70%, 50%)", "font": {"color": "white"}, "id": "church_00047.png", "label": "1", "shape": "dot", "title": "church_00047.png"}, {"color": "hsl(50, 70%, 50%)", "font": {"color": "white"}, "id": "church_00041.png", "label": "1", "shape": "dot", "title": "church_00041.png"}, {"color": "hsl(350, 70%, 50%)", "font": {"color": "white"}, "id": "church_00055.png", "label": "7", "shape": "dot", "title": "church_00055.png"}, {"color": "hsl(40, 70%, 50%)", "font": {"color": "white"}, "id": "church_00013.png", "label": "8", "shape": "dot", "title": "church_00013.png"}, {"color": "hsl(40, 70%, 50%)", "font": {"color": "white"}, "id": "church_00019.png", "label": "8", "shape": "dot", "title": "church_00019.png"}, {"color": "hsl(40, 70%, 50%)", "font": {"color": "white"}, "id": "church_00012.png", "label": "8", "shape": "dot", "title": "church_00012.png"}, {"color": "hsl(50, 70%, 50%)", "font": {"color": "white"}, "id": "church_00048.png", "label": "1", "shape": "dot", "title": "church_00048.png"}, {"color": "hsl(350, 70%, 50%)", "font": {"color": "white"}, "id": "church_00108.png", "label": "7", "shape": "dot", "title": "church_00108.png"}, {"color": "hsl(250, 70%, 50%)", "font": {"color": "white"}, "id": "church_00111.png", "label": "5", "shape": "dot", "title": "church_00111.png"}, {"color": "hsl(90, 70%, 50%)", "font": {"color": "white"}, "id": "church_00091.png", "label": "9", "shape": "dot", "title": "church_00091.png"}, {"color": "hsl(100, 70%, 50%)", "font": {"color": "white"}, "id": "church_00082.png", "label": "2", "shape": "dot", "title": "church_00082.png"}, {"color": "hsl(0, 70%, 50%)", "font": {"color": "white"}, "id": "church_00023.png", "label": "0", "shape": "dot", "title": "church_00023.png"}, {"color": "hsl(250, 70%, 50%)", "font": {"color": "white"}, "id": "church_00053.png", "label": "5", "shape": "dot", "title": "church_00053.png"}, {"color": "hsl(90, 70%, 50%)", "font": {"color": "white"}, "id": "church_00079.png", "label": "9", "shape": "dot", "title": "church_00079.png"}, {"color": "hsl(40, 70%, 50%)", "font": {"color": "white"}, "id": "church_00014.png", "label": "8", "shape": "dot", "title": "church_00014.png"}, {"color": "hsl(0, 70%, 50%)", "font": {"color": "white"}, "id": "church_00022.png", "label": "0", "shape": "dot", "title": "church_00022.png"}, {"color": "hsl(140, 70%, 50%)", "font": {"color": "white"}, "id": "church_00104.png", "label": "10", "shape": "dot", "title": "church_00104.png"}, {"color": "hsl(50, 70%, 50%)", "font": {"color": "white"}, "id": "church_00043.png", "label": "1", "shape": "dot", "title": "church_00043.png"}, {"color": "hsl(350, 70%, 50%)", "font": {"color": "white"}, "id": "church_00109.png", "label": "7", "shape": "dot", "title": "church_00109.png"}, {"color": "hsl(350, 70%, 50%)", "font": {"color": "white"}, "id": "church_00100.png", "label": "7", "shape": "dot", "title": "church_00100.png"}, {"color": "hsl(40, 70%, 50%)", "font": {"color": "white"}, "id": "church_00018.png", "label": "8", "shape": "dot", "title": "church_00018.png"}, {"color": "hsl(0, 70%, 50%)", "font": {"color": "white"}, "id": "church_00021.png", "label": "0", "shape": "dot", "title": "church_00021.png"}, {"color": "hsl(100, 70%, 50%)", "font": {"color": "white"}, "id": "church_00078.png", "label": "2", "shape": "dot", "title": "church_00078.png"}, {"color": "hsl(100, 70%, 50%)", "font": {"color": "white"}, "id": "church_00083.png", "label": "2", "shape": "dot", "title": "church_00083.png"}, {"color": "hsl(90, 70%, 50%)", "font": {"color": "white"}, "id": "church_00092.png", "label": "9", "shape": "dot", "title": "church_00092.png"}, {"color": "hsl(90, 70%, 50%)", "font": {"color": "white"}, "id": "church_00093.png", "label": "9", "shape": "dot", "title": "church_00093.png"}, {"color": "hsl(100, 70%, 50%)", "font": {"color": "white"}, "id": "church_00073.png", "label": "2", "shape": "dot", "title": "church_00073.png"}, {"color": "hsl(90, 70%, 50%)", "font": {"color": "white"}, "id": "church_00087.png", "label": "9", "shape": "dot", "title": "church_00087.png"}, {"color": "hsl(0, 70%, 50%)", "font": {"color": "white"}, "id": "church_00005.png", "label": "0", "shape": "dot", "title": "church_00005.png"}, {"color": "hsl(0, 70%, 50%)", "font": {"color": "white"}, "id": "church_00028.png", "label": "0", "shape": "dot", "title": "church_00028.png"}, {"color": "hsl(90, 70%, 50%)", "font": {"color": "white"}, "id": "church_00075.png", "label": "9", "shape": "dot", "title": "church_00075.png"}, {"color": "hsl(0, 70%, 50%)", "font": {"color": "white"}, "id": "church_00006.png", "label": "0", "shape": "dot", "title": "church_00006.png"}, {"color": "hsl(0, 70%, 50%)", "font": {"color": "white"}, "id": "church_00004.png", "label": "0", "shape": "dot", "title": "church_00004.png"}, {"color": "hsl(0, 70%, 50%)", "font": {"color": "white"}, "id": "church_00016.png", "label": "0", "shape": "dot", "title": "church_00016.png"}, {"color": "hsl(350, 70%, 50%)", "font": {"color": "white"}, "id": "church_00099.png", "label": "7", "shape": "dot", "title": "church_00099.png"}, {"color": "hsl(190, 70%, 50%)", "font": {"color": "white"}, "id": "church_00025.png", "label": "11", "shape": "dot", "title": "church_00025.png"}, {"color": "hsl(50, 70%, 50%)", "font": {"color": "white"}, "id": "church_00040.png", "label": "1", "shape": "dot", "title": "church_00040.png"}, {"color": "hsl(240, 70%, 50%)", "font": {"color": "white"}, "id": "kyiv_puppet_theater_img_20220127_170709.png", "label": "12", "shape": "dot", "title": "kyiv_puppet_theater_img_20220127_170709.png"}, {"color": "hsl(240, 70%, 50%)", "font": {"color": "white"}, "id": "kyiv_puppet_theater_img_20220127_170633.png", "label": "12", "shape": "dot", "title": "kyiv_puppet_theater_img_20220127_170633.png"}, {"color": "hsl(290, 70%, 50%)", "font": {"color": "white"}, "id": "kyiv_puppet_theater_img_20220127_170350.png", "label": "13", "shape": "dot", "title": "kyiv_puppet_theater_img_20220127_170350.png"}, {"color": "hsl(340, 70%, 50%)", "font": {"color": "white"}, "id": "kyiv_puppet_theater_img_20220127_170339.png", "label": "14", "shape": "dot", "title": "kyiv_puppet_theater_img_20220127_170339.png"}, {"color": "hsl(30, 70%, 50%)", "font": {"color": "white"}, "id": "kyiv_puppet_theater_img_20220127_170250.png", "label": "15", "shape": "dot", "title": "kyiv_puppet_theater_img_20220127_170250.png"}, {"color": "hsl(80, 70%, 50%)", "font": {"color": "white"}, "id": "kyiv_puppet_theater_img_20220127_165709.png", "label": "16", "shape": "dot", "title": "kyiv_puppet_theater_img_20220127_165709.png"}, {"color": "hsl(80, 70%, 50%)", "font": {"color": "white"}, "id": "kyiv_puppet_theater_img_20220127_165703.png", "label": "16", "shape": "dot", "title": "kyiv_puppet_theater_img_20220127_165703.png"}, {"color": "hsl(80, 70%, 50%)", "font": {"color": "white"}, "id": "kyiv_puppet_theater_img_20220127_165700.png", "label": "16", "shape": "dot", "title": "kyiv_puppet_theater_img_20220127_165700.png"}, {"color": "hsl(130, 70%, 50%)", "font": {"color": "white"}, "id": "kyiv_puppet_theater_img_20220127_165641.png", "label": "17", "shape": "dot", "title": "kyiv_puppet_theater_img_20220127_165641.png"}, {"color": "hsl(180, 70%, 50%)", "font": {"color": "white"}, "id": "kyiv_puppet_theater_img_20220127_165612.png", "label": "18", "shape": "dot", "title": "kyiv_puppet_theater_img_20220127_165612.png"}, {"color": "hsl(180, 70%, 50%)", "font": {"color": "white"}, "id": "kyiv_puppet_theater_img_20220127_165608.png", "label": "18", "shape": "dot", "title": "kyiv_puppet_theater_img_20220127_165608.png"}, {"color": "hsl(240, 70%, 50%)", "font": {"color": "white"}, "id": "kyiv_puppet_theater_img_20220127_165549.png", "label": "12", "shape": "dot", "title": "kyiv_puppet_theater_img_20220127_165549.png"}, {"color": "hsl(240, 70%, 50%)", "font": {"color": "white"}, "id": "kyiv_puppet_theater_img_20220127_165418.png", "label": "12", "shape": "dot", "title": "kyiv_puppet_theater_img_20220127_165418.png"}, {"color": "hsl(280, 70%, 50%)", "font": {"color": "white"}, "id": "kyiv_puppet_theater_img_20220127_165343.png", "label": "20", "shape": "dot", "title": "kyiv_puppet_theater_img_20220127_165343.png"}, {"color": "hsl(240, 70%, 50%)", "font": {"color": "white"}, "id": "kyiv_puppet_theater_img_20220127_165449.png", "label": "12", "shape": "dot", "title": "kyiv_puppet_theater_img_20220127_165449.png"}, {"color": "hsl(330, 70%, 50%)", "font": {"color": "white"}, "id": "kyiv_puppet_theater_img_20220127_165722.png", "label": "21", "shape": "dot", "title": "kyiv_puppet_theater_img_20220127_165722.png"}, {"color": "hsl(80, 70%, 50%)", "font": {"color": "white"}, "id": "kyiv_puppet_theater_img_20220127_165737.png", "label": "16", "shape": "dot", "title": "kyiv_puppet_theater_img_20220127_165737.png"}, {"color": "hsl(20, 70%, 50%)", "font": {"color": "white"}, "id": "kyiv_puppet_theater_img_20220127_165748.png", "label": "22", "shape": "dot", "title": "kyiv_puppet_theater_img_20220127_165748.png"}, {"color": "hsl(70, 70%, 50%)", "font": {"color": "white"}, "id": "kyiv_puppet_theater_img_20220127_165811.png", "label": "23", "shape": "dot", "title": "kyiv_puppet_theater_img_20220127_165811.png"}, {"color": "hsl(230, 70%, 50%)", "font": {"color": "white"}, "id": "kyiv_puppet_theater_img_20220127_165815.png", "label": "19", "shape": "dot", "title": "kyiv_puppet_theater_img_20220127_165815.png"}, {"color": "hsl(200, 70%, 50%)", "font": {"color": "white"}, "id": "kyiv_puppet_theater_img_20220127_165822.png", "label": "4", "shape": "dot", "title": "kyiv_puppet_theater_img_20220127_165822.png"}, {"color": "hsl(240, 70%, 50%)", "font": {"color": "white"}, "id": "kyiv_puppet_theater_img_20220127_165845.png", "label": "12", "shape": "dot", "title": "kyiv_puppet_theater_img_20220127_165845.png"}, {"color": "hsl(240, 70%, 50%)", "font": {"color": "white"}, "id": "kyiv_puppet_theater_img_20220127_165920.png", "label": "12", "shape": "dot", "title": "kyiv_puppet_theater_img_20220127_165920.png"}, {"color": "hsl(240, 70%, 50%)", "font": {"color": "white"}, "id": "kyiv_puppet_theater_img_20220127_165957.png", "label": "12", "shape": "dot", "title": "kyiv_puppet_theater_img_20220127_165957.png"}, {"color": "hsl(300, 70%, 50%)", "font": {"color": "white"}, "id": "kyiv_puppet_theater_img_20220127_170001.png", "label": "6", "shape": "dot", "title": "kyiv_puppet_theater_img_20220127_170001.png"}, {"color": "hsl(240, 70%, 50%)", "font": {"color": "white"}, "id": "kyiv_puppet_theater_img_20220127_170022.png", "label": "12", "shape": "dot", "title": "kyiv_puppet_theater_img_20220127_170022.png"}]);
+                  edges = new vis.DataSet([{"from": "church_00020.png", "to": "church_00016.png"}, {"from": "church_00020.png", "to": "church_00043.png"}, {"from": "church_00020.png", "to": "church_00023.png"}, {"from": "church_00020.png", "to": "church_00041.png"}, {"from": "church_00020.png", "to": "church_00006.png"}, {"from": "church_00020.png", "to": "church_00108.png"}, {"from": "church_00020.png", "to": "church_00004.png"}, {"from": "church_00020.png", "to": "church_00028.png"}, {"from": "church_00020.png", "to": "church_00073.png"}, {"from": "church_00020.png", "to": "church_00022.png"}, {"from": "church_00020.png", "to": "church_00021.png"}, {"from": "church_00020.png", "to": "church_00045.png"}, {"from": "church_00020.png", "to": "church_00048.png"}, {"from": "church_00046.png", "to": "church_00041.png"}, {"from": "church_00046.png", "to": "church_00043.png"}, {"from": "church_00046.png", "to": "church_00047.png"}, {"from": "church_00080.png", "to": "church_00110.png"}, {"from": "church_00080.png", "to": "church_00083.png"}, {"from": "church_00080.png", "to": "church_00069.png"}, {"from": "church_00080.png", "to": "church_00073.png"}, {"from": "church_00080.png", "to": "church_00082.png"}, {"from": "church_00080.png", "to": "church_00041.png"}, {"from": "church_00080.png", "to": "church_00078.png"}, {"from": "church_00080.png", "to": "church_00071.png"}, {"from": "church_00080.png", "to": "church_00048.png"}, {"from": "church_00045.png", "to": "church_00006.png"}, {"from": "church_00045.png", "to": "church_00016.png"}, {"from": "church_00045.png", "to": "church_00039.png"}, {"from": "church_00045.png", "to": "church_00028.png"}, {"from": "church_00045.png", "to": "church_00021.png"}, {"from": "church_00045.png", "to": "church_00022.png"}, {"from": "church_00045.png", "to": "church_00043.png"}, {"from": "church_00045.png", "to": "church_00004.png"}, {"from": "church_00071.png", "to": "church_00082.png"}, {"from": "church_00071.png", "to": "church_00038.png"}, {"from": "church_00071.png", "to": "church_00078.png"}, {"from": "church_00071.png", "to": "church_00048.png"}, {"from": "church_00071.png", "to": "church_00069.png"}, {"from": "church_00071.png", "to": "church_00075.png"}, {"from": "church_00071.png", "to": "church_00083.png"}, {"from": "church_00071.png", "to": "church_00109.png"}, {"from": "church_00071.png", "to": "church_00108.png"}, {"from": "church_00071.png", "to": "church_00073.png"}, {"from": "church_00071.png", "to": "church_00110.png"}, {"from": "church_00039.png", "to": "church_00035.png"}, {"from": "church_00039.png", "to": "church_00021.png"}, {"from": "church_00069.png", "to": "church_00109.png"}, {"from": "church_00069.png", "to": "church_00048.png"}, {"from": "church_00069.png", "to": "church_00082.png"}, {"from": "church_00069.png", "to": "church_00073.png"}, {"from": "church_00069.png", "to": "church_00078.png"}, {"from": "church_00069.png", "to": "church_00110.png"}, {"from": "church_00069.png", "to": "church_00083.png"}, {"from": "church_00026.png", "to": "church_00111.png"}, {"from": "church_00026.png", "to": "church_00018.png"}, {"from": "church_00026.png", "to": "church_00053.png"}, {"from": "church_00026.png", "to": "church_00012.png"}, {"from": "church_00038.png", "to": "church_00048.png"}, {"from": "church_00038.png", "to": "church_00040.png"}, {"from": "church_00038.png", "to": "church_00110.png"}, {"from": "church_00110.png", "to": "church_00108.png"}, {"from": "church_00110.png", "to": "church_00100.png"}, {"from": "church_00110.png", "to": "church_00073.png"}, {"from": "church_00110.png", "to": "church_00109.png"}, {"from": "church_00110.png", "to": "church_00048.png"}, {"from": "church_00110.png", "to": "church_00082.png"}, {"from": "church_00110.png", "to": "church_00099.png"}, {"from": "church_00017.png", "to": "church_00078.png"}, {"from": "church_00017.png", "to": "church_00023.png"}, {"from": "church_00017.png", "to": "church_00014.png"}, {"from": "church_00017.png", "to": "church_00013.png"}, {"from": "church_00017.png", "to": "church_00012.png"}, {"from": "church_00017.png", "to": "church_00018.png"}, {"from": "church_00017.png", "to": "church_00047.png"}, {"from": "church_00047.png", "to": "church_00048.png"}, {"from": "church_00047.png", "to": "church_00043.png"}, {"from": "church_00047.png", "to": "church_00041.png"}, {"from": "church_00041.png", "to": "church_00043.png"}, {"from": "church_00041.png", "to": "church_00048.png"}, {"from": "church_00055.png", "to": "church_00099.png"}, {"from": "church_00055.png", "to": "church_00109.png"}, {"from": "church_00055.png", "to": "church_00100.png"}, {"from": "church_00055.png", "to": "church_00048.png"}, {"from": "church_00055.png", "to": "church_00108.png"}, {"from": "church_00013.png", "to": "church_00014.png"}, {"from": "church_00013.png", "to": "church_00019.png"}, {"from": "church_00013.png", "to": "church_00012.png"}, {"from": "church_00013.png", "to": "church_00018.png"}, {"from": "church_00013.png", "to": "church_00023.png"}, {"from": "church_00019.png", "to": "church_00012.png"}, {"from": "church_00019.png", "to": "church_00014.png"}, {"from": "church_00019.png", "to": "church_00018.png"}, {"from": "church_00012.png", "to": "church_00018.png"}, {"from": "church_00012.png", "to": "church_00014.png"}, {"from": "church_00048.png", "to": "church_00109.png"}, {"from": "church_00048.png", "to": "church_00078.png"}, {"from": "church_00048.png", "to": "church_00073.png"}, {"from": "church_00048.png", "to": "church_00043.png"}, {"from": "church_00108.png", "to": "church_00100.png"}, {"from": "church_00108.png", "to": "church_00078.png"}, {"from": "church_00108.png", "to": "church_00004.png"}, {"from": "church_00108.png", "to": "church_00099.png"}, {"from": "church_00108.png", "to": "church_00083.png"}, {"from": "church_00108.png", "to": "church_00109.png"}, {"from": "church_00111.png", "to": "church_00053.png"}, {"from": "church_00091.png", "to": "church_00087.png"}, {"from": "church_00091.png", "to": "church_00092.png"}, {"from": "church_00082.png", "to": "church_00073.png"}, {"from": "church_00082.png", "to": "church_00083.png"}, {"from": "church_00082.png", "to": "church_00078.png"}, {"from": "church_00023.png", "to": "church_00006.png"}, {"from": "church_00023.png", "to": "church_00078.png"}, {"from": "church_00023.png", "to": "church_00022.png"}, {"from": "church_00023.png", "to": "church_00028.png"}, {"from": "church_00023.png", "to": "church_00004.png"}, {"from": "church_00023.png", "to": "church_00099.png"}, {"from": "church_00079.png", "to": "church_00092.png"}, {"from": "church_00079.png", "to": "church_00093.png"}, {"from": "church_00079.png", "to": "church_00075.png"}, {"from": "church_00079.png", "to": "church_00087.png"}, {"from": "church_00014.png", "to": "church_00018.png"}, {"from": "church_00022.png", "to": "church_00016.png"}, {"from": "church_00022.png", "to": "church_00043.png"}, {"from": "church_00022.png", "to": "church_00073.png"}, {"from": "church_00022.png", "to": "church_00004.png"}, {"from": "church_00022.png", "to": "church_00028.png"}, {"from": "church_00022.png", "to": "church_00006.png"}, {"from": "church_00022.png", "to": "church_00021.png"}, {"from": "church_00109.png", "to": "church_00099.png"}, {"from": "church_00109.png", "to": "church_00100.png"}, {"from": "church_00109.png", "to": "church_00073.png"}, {"from": "church_00100.png", "to": "church_00099.png"}, {"from": "church_00018.png", "to": "church_00093.png"}, {"from": "church_00021.png", "to": "church_00040.png"}, {"from": "church_00078.png", "to": "church_00083.png"}, {"from": "church_00078.png", "to": "church_00073.png"}, {"from": "church_00092.png", "to": "church_00087.png"}, {"from": "church_00092.png", "to": "church_00093.png"}, {"from": "church_00093.png", "to": "church_00087.png"}, {"from": "church_00073.png", "to": "church_00016.png"}, {"from": "church_00005.png", "to": "church_00006.png"}, {"from": "church_00005.png", "to": "church_00028.png"}, {"from": "church_00005.png", "to": "church_00004.png"}, {"from": "church_00005.png", "to": "church_00016.png"}, {"from": "church_00028.png", "to": "church_00006.png"}, {"from": "church_00028.png", "to": "church_00004.png"}, {"from": "church_00028.png", "to": "church_00016.png"}, {"from": "church_00006.png", "to": "church_00004.png"}, {"from": "church_00006.png", "to": "church_00016.png"}, {"from": "church_00004.png", "to": "church_00016.png"}, {"from": "kyiv_puppet_theater_img_20220127_170709.png", "to": "kyiv_puppet_theater_img_20220127_165957.png"}, {"from": "kyiv_puppet_theater_img_20220127_170709.png", "to": "kyiv_puppet_theater_img_20220127_170633.png"}, {"from": "kyiv_puppet_theater_img_20220127_170709.png", "to": "kyiv_puppet_theater_img_20220127_165920.png"}, {"from": "kyiv_puppet_theater_img_20220127_170633.png", "to": "kyiv_puppet_theater_img_20220127_165920.png"}, {"from": "kyiv_puppet_theater_img_20220127_170633.png", "to": "kyiv_puppet_theater_img_20220127_165957.png"}, {"from": "kyiv_puppet_theater_img_20220127_165709.png", "to": "kyiv_puppet_theater_img_20220127_165703.png"}, {"from": "kyiv_puppet_theater_img_20220127_165703.png", "to": "kyiv_puppet_theater_img_20220127_165700.png"}, {"from": "kyiv_puppet_theater_img_20220127_165703.png", "to": "kyiv_puppet_theater_img_20220127_165737.png"}, {"from": "kyiv_puppet_theater_img_20220127_165700.png", "to": "kyiv_puppet_theater_img_20220127_165737.png"}, {"from": "kyiv_puppet_theater_img_20220127_165612.png", "to": "kyiv_puppet_theater_img_20220127_165608.png"}, {"from": "kyiv_puppet_theater_img_20220127_165549.png", "to": "kyiv_puppet_theater_img_20220127_165957.png"}, {"from": "kyiv_puppet_theater_img_20220127_165549.png", "to": "kyiv_puppet_theater_img_20220127_165449.png"}, {"from": "kyiv_puppet_theater_img_20220127_165549.png", "to": "kyiv_puppet_theater_img_20220127_165418.png"}, {"from": "kyiv_puppet_theater_img_20220127_165549.png", "to": "kyiv_puppet_theater_img_20220127_165845.png"}, {"from": "kyiv_puppet_theater_img_20220127_165418.png", "to": "kyiv_puppet_theater_img_20220127_165449.png"}, {"from": "kyiv_puppet_theater_img_20220127_165418.png", "to": "kyiv_puppet_theater_img_20220127_165957.png"}, {"from": "kyiv_puppet_theater_img_20220127_165920.png", "to": "kyiv_puppet_theater_img_20220127_165957.png"}, {"from": "kyiv_puppet_theater_img_20220127_165957.png", "to": "kyiv_puppet_theater_img_20220127_170022.png"}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

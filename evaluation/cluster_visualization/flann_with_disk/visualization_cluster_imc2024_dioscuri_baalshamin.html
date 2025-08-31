@@ -1,0 +1,250 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 750px;
+                 background-color: #222222;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+             #loadingBar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width: 100%;
+                 height: 750px;
+                 background-color:rgba(200,200,200,0.8);
+                 -webkit-transition: all 0.5s ease;
+                 -moz-transition: all 0.5s ease;
+                 -ms-transition: all 0.5s ease;
+                 -o-transition: all 0.5s ease;
+                 transition: all 0.5s ease;
+                 opacity:1;
+             }
+
+             #bar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width:20px;
+                 height:20px;
+                 margin:auto auto auto auto;
+                 border-radius:11px;
+                 border:2px solid rgba(30,30,30,0.05);
+                 background: rgb(0, 173, 246); /* Old browsers */
+                 box-shadow: 2px 0px 4px rgba(0,0,0,0.4);
+             }
+
+             #border {
+                 position:absolute;
+                 top:10px;
+                 left:10px;
+                 width:500px;
+                 height:23px;
+                 margin:auto auto auto auto;
+                 box-shadow: 0px 0px 4px rgba(0,0,0,0.2);
+                 border-radius:10px;
+             }
+
+             #text {
+                 position:absolute;
+                 top:8px;
+                 left:530px;
+                 width:30px;
+                 height:50px;
+                 margin:auto auto auto auto;
+                 font-size:22px;
+                 color: #000000;
+             }
+
+             div.outerBorder {
+                 position:relative;
+                 top:400px;
+                 width:600px;
+                 height:44px;
+                 margin:auto auto auto auto;
+                 border:8px solid rgba(0,0,0,0.1);
+                 background: rgb(252,252,252); /* Old browsers */
+                 background: -moz-linear-gradient(top,  rgba(252,252,252,1) 0%, rgba(237,237,237,1) 100%); /* FF3.6+ */
+                 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(252,252,252,1)), color-stop(100%,rgba(237,237,237,1))); /* Chrome,Safari4+ */
+                 background: -webkit-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Chrome10+,Safari5.1+ */
+                 background: -o-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Opera 11.10+ */
+                 background: -ms-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* IE10+ */
+                 background: linear-gradient(to bottom,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* W3C */
+                 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfcfc', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */
+                 border-radius:72px;
+                 box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+             }
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+            <div id="loadingBar">
+              <div class="outerBorder">
+                <div id="text">0%</div>
+                <div id="border">
+                  <div id="bar"></div>
+                </div>
+              </div>
+            </div>
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "hsl(0, 70%, 50%)", "font": {"color": "white"}, "id": "baalshamin_img_2163.png", "label": "0", "shape": "dot", "title": "baalshamin_img_2163.png"}, {"color": "hsl(90, 70%, 50%)", "font": {"color": "white"}, "id": "baalshamin_8100208.png", "label": "9", "shape": "dot", "title": "baalshamin_8100208.png"}, {"color": "hsl(100, 70%, 50%)", "font": {"color": "white"}, "id": "baalshamin_5821.png", "label": "2", "shape": "dot", "title": "baalshamin_5821.png"}, {"color": "hsl(150, 70%, 50%)", "font": {"color": "white"}, "id": "baalshamin_5748.png", "label": "3", "shape": "dot", "title": "baalshamin_5748.png"}, {"color": "hsl(200, 70%, 50%)", "font": {"color": "white"}, "id": "baalshamin_5747.png", "label": "4", "shape": "dot", "title": "baalshamin_5747.png"}, {"color": "hsl(250, 70%, 50%)", "font": {"color": "white"}, "id": "baalshamin_5741.png", "label": "5", "shape": "dot", "title": "baalshamin_5741.png"}, {"color": "hsl(200, 70%, 50%)", "font": {"color": "white"}, "id": "baalshamin_5740.png", "label": "4", "shape": "dot", "title": "baalshamin_5740.png"}, {"color": "hsl(300, 70%, 50%)", "font": {"color": "white"}, "id": "baalshamin_25.png", "label": "6", "shape": "dot", "title": "baalshamin_25.png"}, {"color": "hsl(150, 70%, 50%)", "font": {"color": "white"}, "id": "baalshamin_2316.png", "label": "3", "shape": "dot", "title": "baalshamin_2316.png"}, {"color": "hsl(40, 70%, 50%)", "font": {"color": "white"}, "id": "baalshamin_19875043841_a36e9ccb18_o.png", "label": "8", "shape": "dot", "title": "baalshamin_19875043841_a36e9ccb18_o.png"}, {"color": "hsl(90, 70%, 50%)", "font": {"color": "white"}, "id": "baalshamin_19770034361_ab8a99f3a9_o.png", "label": "9", "shape": "dot", "title": "baalshamin_19770034361_ab8a99f3a9_o.png"}, {"color": "hsl(90, 70%, 50%)", "font": {"color": "white"}, "id": "baalshamin_19770021361_0a7ef660e2_o.png", "label": "9", "shape": "dot", "title": "baalshamin_19770021361_0a7ef660e2_o.png"}, {"color": "hsl(140, 70%, 50%)", "font": {"color": "white"}, "id": "baalshamin_19765295615_6a8758cc07_o.png", "label": "10", "shape": "dot", "title": "baalshamin_19765295615_6a8758cc07_o.png"}, {"color": "hsl(90, 70%, 50%)", "font": {"color": "white"}, "id": "baalshamin_19758057422_3b2d8bf005_o.png", "label": "9", "shape": "dot", "title": "baalshamin_19758057422_3b2d8bf005_o.png"}, {"color": "hsl(90, 70%, 50%)", "font": {"color": "white"}, "id": "baalshamin_19758050972_3e8ee37d98_o.png", "label": "9", "shape": "dot", "title": "baalshamin_19758050972_3e8ee37d98_o.png"}, {"color": "hsl(190, 70%, 50%)", "font": {"color": "white"}, "id": "baalshamin_85328479_89f3b31dfa_o.png", "label": "11", "shape": "dot", "title": "baalshamin_85328479_89f3b31dfa_o.png"}, {"color": "hsl(90, 70%, 50%)", "font": {"color": "white"}, "id": "baalshamin_palmyra_baalshamin.png", "label": "9", "shape": "dot", "title": "baalshamin_palmyra_baalshamin.png"}, {"color": "hsl(240, 70%, 50%)", "font": {"color": "white"}, "id": "baalshamin_182z.png", "label": "12", "shape": "dot", "title": "baalshamin_182z.png"}, {"color": "hsl(40, 70%, 50%)", "font": {"color": "white"}, "id": "baalshamin_19144401003_5d0dee05f5_o.png", "label": "8", "shape": "dot", "title": "baalshamin_19144401003_5d0dee05f5_o.png"}, {"color": "hsl(240, 70%, 50%)", "font": {"color": "white"}, "id": "baalshamin_194d.png", "label": "12", "shape": "dot", "title": "baalshamin_194d.png"}, {"color": "hsl(140, 70%, 50%)", "font": {"color": "white"}, "id": "baalshamin_19577278428_e8044e854b_o.png", "label": "10", "shape": "dot", "title": "baalshamin_19577278428_e8044e854b_o.png"}, {"color": "hsl(90, 70%, 50%)", "font": {"color": "white"}, "id": "baalshamin_19577300988_4e4ff423a7_o.png", "label": "9", "shape": "dot", "title": "baalshamin_19577300988_4e4ff423a7_o.png"}, {"color": "hsl(90, 70%, 50%)", "font": {"color": "white"}, "id": "baalshamin_19577310688_5d2e78386b_o.png", "label": "9", "shape": "dot", "title": "baalshamin_19577310688_5d2e78386b_o.png"}, {"color": "hsl(90, 70%, 50%)", "font": {"color": "white"}, "id": "baalshamin_19577313278_bf436a42f4_o.png", "label": "9", "shape": "dot", "title": "baalshamin_19577313278_bf436a42f4_o.png"}, {"color": "hsl(140, 70%, 50%)", "font": {"color": "white"}, "id": "baalshamin_19578696189_92b41b9b79_o.png", "label": "10", "shape": "dot", "title": "baalshamin_19578696189_92b41b9b79_o.png"}, {"color": "hsl(140, 70%, 50%)", "font": {"color": "white"}, "id": "baalshamin_19739127926_d1f03f70ed_o.png", "label": "10", "shape": "dot", "title": "baalshamin_19739127926_d1f03f70ed_o.png"}, {"color": "hsl(90, 70%, 50%)", "font": {"color": "white"}, "id": "baalshamin_19739156806_e4f69d8792_o.png", "label": "9", "shape": "dot", "title": "baalshamin_19739156806_e4f69d8792_o.png"}, {"color": "hsl(150, 70%, 50%)", "font": {"color": "white"}, "id": "baalshamin_cimg2278.png", "label": "3", "shape": "dot", "title": "baalshamin_cimg2278.png"}, {"color": "hsl(150, 70%, 50%)", "font": {"color": "white"}, "id": "baalshamin_cimg2282.png", "label": "3", "shape": "dot", "title": "baalshamin_cimg2282.png"}, {"color": "hsl(80, 70%, 50%)", "font": {"color": "white"}, "id": "baalshamin_dsc01926.png", "label": "16", "shape": "dot", "title": "baalshamin_dsc01926.png"}, {"color": "hsl(80, 70%, 50%)", "font": {"color": "white"}, "id": "baalshamin_dscf4498.png", "label": "16", "shape": "dot", "title": "baalshamin_dscf4498.png"}, {"color": "hsl(80, 70%, 50%)", "font": {"color": "white"}, "id": "baalshamin_dscf4501.png", "label": "16", "shape": "dot", "title": "baalshamin_dscf4501.png"}, {"color": "hsl(340, 70%, 50%)", "font": {"color": "white"}, "id": "baalshamin_dscf4642.png", "label": "14", "shape": "dot", "title": "baalshamin_dscf4642.png"}, {"color": "hsl(30, 70%, 50%)", "font": {"color": "white"}, "id": "baalshamin_dscf4644.png", "label": "15", "shape": "dot", "title": "baalshamin_dscf4644.png"}, {"color": "hsl(80, 70%, 50%)", "font": {"color": "white"}, "id": "baalshamin_dscn2009.png", "label": "16", "shape": "dot", "title": "baalshamin_dscn2009.png"}, {"color": "hsl(190, 70%, 50%)", "font": {"color": "white"}, "id": "baalshamin_dscn2022.png", "label": "11", "shape": "dot", "title": "baalshamin_dscn2022.png"}, {"color": "hsl(150, 70%, 50%)", "font": {"color": "white"}, "id": "baalshamin_dscn2027.png", "label": "3", "shape": "dot", "title": "baalshamin_dscn2027.png"}, {"color": "hsl(130, 70%, 50%)", "font": {"color": "white"}, "id": "baalshamin_dscn2032.png", "label": "17", "shape": "dot", "title": "baalshamin_dscn2032.png"}, {"color": "hsl(80, 70%, 50%)", "font": {"color": "white"}, "id": "baalshamin_dscn2034.png", "label": "16", "shape": "dot", "title": "baalshamin_dscn2034.png"}, {"color": "hsl(180, 70%, 50%)", "font": {"color": "white"}, "id": "baalshamin_dscn2063.png", "label": "18", "shape": "dot", "title": "baalshamin_dscn2063.png"}, {"color": "hsl(180, 70%, 50%)", "font": {"color": "white"}, "id": "baalshamin_dscn2064.png", "label": "18", "shape": "dot", "title": "baalshamin_dscn2064.png"}, {"color": "hsl(180, 70%, 50%)", "font": {"color": "white"}, "id": "baalshamin_dscn2065.png", "label": "18", "shape": "dot", "title": "baalshamin_dscn2065.png"}, {"color": "hsl(90, 70%, 50%)", "font": {"color": "white"}, "id": "baalshamin_dscn2066.png", "label": "9", "shape": "dot", "title": "baalshamin_dscn2066.png"}, {"color": "hsl(240, 70%, 50%)", "font": {"color": "white"}, "id": "baalshamin_hpim3190.png", "label": "12", "shape": "dot", "title": "baalshamin_hpim3190.png"}, {"color": "hsl(80, 70%, 50%)", "font": {"color": "white"}, "id": "baalshamin_img_1145.png", "label": "16", "shape": "dot", "title": "baalshamin_img_1145.png"}, {"color": "hsl(230, 70%, 50%)", "font": {"color": "white"}, "id": "baalshamin_image29.png", "label": "19", "shape": "dot", "title": "baalshamin_image29.png"}, {"color": "hsl(280, 70%, 50%)", "font": {"color": "white"}, "id": "baalshamin_image6.png", "label": "20", "shape": "dot", "title": "baalshamin_image6.png"}, {"color": "hsl(150, 70%, 50%)", "font": {"color": "white"}, "id": "baalshamin_pict0818.png", "label": "3", "shape": "dot", "title": "baalshamin_pict0818.png"}, {"color": "hsl(150, 70%, 50%)", "font": {"color": "white"}, "id": "baalshamin_palmyr29.png", "label": "3", "shape": "dot", "title": "baalshamin_palmyr29.png"}, {"color": "hsl(330, 70%, 50%)", "font": {"color": "white"}, "id": "outliers_39500842_567338329.png", "label": "21", "shape": "dot", "title": "outliers_39500842_567338329.png"}, {"color": "hsl(20, 70%, 50%)", "font": {"color": "white"}, "id": "outliers_04356156_8480804407.png", "label": "22", "shape": "dot", "title": "outliers_04356156_8480804407.png"}, {"color": "hsl(70, 70%, 50%)", "font": {"color": "white"}, "id": "outliers_08766078_2117237656.png", "label": "23", "shape": "dot", "title": "outliers_08766078_2117237656.png"}, {"color": "hsl(170, 70%, 50%)", "font": {"color": "white"}, "id": "outliers_15001797_2073024252.png", "label": "25", "shape": "dot", "title": "outliers_15001797_2073024252.png"}, {"color": "hsl(170, 70%, 50%)", "font": {"color": "white"}, "id": "outliers_15108470_13126668493.png", "label": "25", "shape": "dot", "title": "outliers_15108470_13126668493.png"}, {"color": "hsl(330, 70%, 50%)", "font": {"color": "white"}, "id": "outliers_16939073_1562031964.png", "label": "21", "shape": "dot", "title": "outliers_16939073_1562031964.png"}, {"color": "hsl(170, 70%, 50%)", "font": {"color": "white"}, "id": "outliers_17617215_8679921663.png", "label": "25", "shape": "dot", "title": "outliers_17617215_8679921663.png"}, {"color": "hsl(330, 70%, 50%)", "font": {"color": "white"}, "id": "outliers_21013750_3810761207.png", "label": "21", "shape": "dot", "title": "outliers_21013750_3810761207.png"}, {"color": "hsl(220, 70%, 50%)", "font": {"color": "white"}, "id": "outliers_22219055_9555156398.png", "label": "26", "shape": "dot", "title": "outliers_22219055_9555156398.png"}, {"color": "hsl(220, 70%, 50%)", "font": {"color": "white"}, "id": "outliers_22516075_5997990597.png", "label": "26", "shape": "dot", "title": "outliers_22516075_5997990597.png"}, {"color": "hsl(330, 70%, 50%)", "font": {"color": "white"}, "id": "outliers_23943395_7008829683.png", "label": "21", "shape": "dot", "title": "outliers_23943395_7008829683.png"}, {"color": "hsl(270, 70%, 50%)", "font": {"color": "white"}, "id": "outliers_25155127_2232385924.png", "label": "27", "shape": "dot", "title": "outliers_25155127_2232385924.png"}, {"color": "hsl(220, 70%, 50%)", "font": {"color": "white"}, "id": "outliers_25182601_5963423001.png", "label": "26", "shape": "dot", "title": "outliers_25182601_5963423001.png"}, {"color": "hsl(170, 70%, 50%)", "font": {"color": "white"}, "id": "outliers_25259690_2957362243.png", "label": "25", "shape": "dot", "title": "outliers_25259690_2957362243.png"}, {"color": "hsl(220, 70%, 50%)", "font": {"color": "white"}, "id": "outliers_25404198_10162152833.png", "label": "26", "shape": "dot", "title": "outliers_25404198_10162152833.png"}, {"color": "hsl(330, 70%, 50%)", "font": {"color": "white"}, "id": "outliers_27039750_8082864097.png", "label": "21", "shape": "dot", "title": "outliers_27039750_8082864097.png"}, {"color": "hsl(330, 70%, 50%)", "font": {"color": "white"}, "id": "outliers_29622692_8024707719.png", "label": "21", "shape": "dot", "title": "outliers_29622692_8024707719.png"}, {"color": "hsl(170, 70%, 50%)", "font": {"color": "white"}, "id": "outliers_29709706_5736365308.png", "label": "25", "shape": "dot", "title": "outliers_29709706_5736365308.png"}, {"color": "hsl(330, 70%, 50%)", "font": {"color": "white"}, "id": "outliers_30202749_4422920822.png", "label": "21", "shape": "dot", "title": "outliers_30202749_4422920822.png"}, {"color": "hsl(220, 70%, 50%)", "font": {"color": "white"}, "id": "outliers_32208117_4023556230.png", "label": "26", "shape": "dot", "title": "outliers_32208117_4023556230.png"}, {"color": "hsl(320, 70%, 50%)", "font": {"color": "white"}, "id": "outliers_32577037_2556031968.png", "label": "28", "shape": "dot", "title": "outliers_32577037_2556031968.png"}, {"color": "hsl(220, 70%, 50%)", "font": {"color": "white"}, "id": "outliers_36840190_2262283891.png", "label": "26", "shape": "dot", "title": "outliers_36840190_2262283891.png"}, {"color": "hsl(170, 70%, 50%)", "font": {"color": "white"}, "id": "outliers_37941822_4613817560.png", "label": "25", "shape": "dot", "title": "outliers_37941822_4613817560.png"}, {"color": "hsl(330, 70%, 50%)", "font": {"color": "white"}, "id": "outliers_46207490_2755733467.png", "label": "21", "shape": "dot", "title": "outliers_46207490_2755733467.png"}, {"color": "hsl(10, 70%, 50%)", "font": {"color": "white"}, "id": "dioscuri_dioscuria_185.png", "label": "29", "shape": "dot", "title": "dioscuri_dioscuria_185.png"}, {"color": "hsl(60, 70%, 50%)", "font": {"color": "white"}, "id": "dioscuri_3dom_fbk_img_1512.png", "label": "30", "shape": "dot", "title": "dioscuri_3dom_fbk_img_1512.png"}, {"color": "hsl(110, 70%, 50%)", "font": {"color": "white"}, "id": "dioscuri_archive_0026.png", "label": "31", "shape": "dot", "title": "dioscuri_archive_0026.png"}, {"color": "hsl(160, 70%, 50%)", "font": {"color": "white"}, "id": "dioscuri_img_0281.png", "label": "32", "shape": "dot", "title": "dioscuri_img_0281.png"}, {"color": "hsl(210, 70%, 50%)", "font": {"color": "white"}, "id": "dioscuri_dioscuria_161.png", "label": "33", "shape": "dot", "title": "dioscuri_dioscuria_161.png"}, {"color": "hsl(260, 70%, 50%)", "font": {"color": "white"}, "id": "dioscuri_templic_23.png", "label": "34", "shape": "dot", "title": "dioscuri_templic_23.png"}, {"color": "hsl(310, 70%, 50%)", "font": {"color": "white"}, "id": "dioscuri_templic_30.png", "label": "35", "shape": "dot", "title": "dioscuri_templic_30.png"}, {"color": "hsl(0, 70%, 50%)", "font": {"color": "white"}, "id": "dioscuri_3dom_fbk_img_1562.png", "label": "36", "shape": "dot", "title": "dioscuri_3dom_fbk_img_1562.png"}, {"color": "hsl(30, 70%, 50%)", "font": {"color": "white"}, "id": "dioscuri_img_0409.png", "label": "51", "shape": "dot", "title": "dioscuri_img_0409.png"}, {"color": "hsl(100, 70%, 50%)", "font": {"color": "white"}, "id": "dioscuri_3dom_fbk_img_1542.png", "label": "38", "shape": "dot", "title": "dioscuri_3dom_fbk_img_1542.png"}, {"color": "hsl(150, 70%, 50%)", "font": {"color": "white"}, "id": "dioscuri_archive_0004.png", "label": "39", "shape": "dot", "title": "dioscuri_archive_0004.png"}, {"color": "hsl(200, 70%, 50%)", "font": {"color": "white"}, "id": "dioscuri_archive_0132.png", "label": "40", "shape": "dot", "title": "dioscuri_archive_0132.png"}, {"color": "hsl(250, 70%, 50%)", "font": {"color": "white"}, "id": "dioscuri_archive_0005.png", "label": "41", "shape": "dot", "title": "dioscuri_archive_0005.png"}, {"color": "hsl(300, 70%, 50%)", "font": {"color": "white"}, "id": "dioscuri_img_0060.png", "label": "42", "shape": "dot", "title": "dioscuri_img_0060.png"}, {"color": "hsl(350, 70%, 50%)", "font": {"color": "white"}, "id": "dioscuri_img_0119.png", "label": "43", "shape": "dot", "title": "dioscuri_img_0119.png"}, {"color": "hsl(350, 70%, 50%)", "font": {"color": "white"}, "id": "dioscuri_3dom_fbk_img_1571.png", "label": "43", "shape": "dot", "title": "dioscuri_3dom_fbk_img_1571.png"}, {"color": "hsl(250, 70%, 50%)", "font": {"color": "white"}, "id": "dioscuri_archive_0057.png", "label": "41", "shape": "dot", "title": "dioscuri_archive_0057.png"}, {"color": "hsl(30, 70%, 50%)", "font": {"color": "white"}, "id": "dioscuri_img_0391.png", "label": "51", "shape": "dot", "title": "dioscuri_img_0391.png"}, {"color": "hsl(30, 70%, 50%)", "font": {"color": "white"}, "id": "dioscuri_img_0362.png", "label": "51", "shape": "dot", "title": "dioscuri_img_0362.png"}, {"color": "hsl(210, 70%, 50%)", "font": {"color": "white"}, "id": "dioscuri_dioscuria_147.png", "label": "33", "shape": "dot", "title": "dioscuri_dioscuria_147.png"}, {"color": "hsl(140, 70%, 50%)", "font": {"color": "white"}, "id": "dioscuri_img_0244.png", "label": "46", "shape": "dot", "title": "dioscuri_img_0244.png"}, {"color": "hsl(150, 70%, 50%)", "font": {"color": "white"}, "id": "dioscuri_archive_0230.png", "label": "39", "shape": "dot", "title": "dioscuri_archive_0230.png"}, {"color": "hsl(190, 70%, 50%)", "font": {"color": "white"}, "id": "dioscuri_img_0219.png", "label": "47", "shape": "dot", "title": "dioscuri_img_0219.png"}, {"color": "hsl(240, 70%, 50%)", "font": {"color": "white"}, "id": "dioscuri_img_0107.png", "label": "48", "shape": "dot", "title": "dioscuri_img_0107.png"}, {"color": "hsl(290, 70%, 50%)", "font": {"color": "white"}, "id": "dioscuri_3dom_fbk_img_1522.png", "label": "49", "shape": "dot", "title": "dioscuri_3dom_fbk_img_1522.png"}, {"color": "hsl(340, 70%, 50%)", "font": {"color": "white"}, "id": "dioscuri_3dom_fbk_img_1582.png", "label": "50", "shape": "dot", "title": "dioscuri_3dom_fbk_img_1582.png"}, {"color": "hsl(190, 70%, 50%)", "font": {"color": "white"}, "id": "dioscuri_img_0272.png", "label": "47", "shape": "dot", "title": "dioscuri_img_0272.png"}, {"color": "hsl(30, 70%, 50%)", "font": {"color": "white"}, "id": "dioscuri_img_0311.png", "label": "51", "shape": "dot", "title": "dioscuri_img_0311.png"}, {"color": "hsl(80, 70%, 50%)", "font": {"color": "white"}, "id": "dioscuri_img_0075.png", "label": "52", "shape": "dot", "title": "dioscuri_img_0075.png"}, {"color": "hsl(130, 70%, 50%)", "font": {"color": "white"}, "id": "dioscuri_3dom_fbk_img_1549.png", "label": "53", "shape": "dot", "title": "dioscuri_3dom_fbk_img_1549.png"}, {"color": "hsl(240, 70%, 50%)", "font": {"color": "white"}, "id": "dioscuri_img_0461.png", "label": "48", "shape": "dot", "title": "dioscuri_img_0461.png"}, {"color": "hsl(190, 70%, 50%)", "font": {"color": "white"}, "id": "dioscuri_img_0207.png", "label": "47", "shape": "dot", "title": "dioscuri_img_0207.png"}, {"color": "hsl(180, 70%, 50%)", "font": {"color": "white"}, "id": "dioscuri_dioscuria_261.png", "label": "54", "shape": "dot", "title": "dioscuri_dioscuria_261.png"}, {"color": "hsl(230, 70%, 50%)", "font": {"color": "white"}, "id": "dioscuri_archive_0015.png", "label": "55", "shape": "dot", "title": "dioscuri_archive_0015.png"}, {"color": "hsl(30, 70%, 50%)", "font": {"color": "white"}, "id": "dioscuri_img_0336.png", "label": "51", "shape": "dot", "title": "dioscuri_img_0336.png"}, {"color": "hsl(30, 70%, 50%)", "font": {"color": "white"}, "id": "dioscuri_img_0133.png", "label": "51", "shape": "dot", "title": "dioscuri_img_0133.png"}, {"color": "hsl(210, 70%, 50%)", "font": {"color": "white"}, "id": "dioscuri_dioscuria_154.png", "label": "33", "shape": "dot", "title": "dioscuri_dioscuria_154.png"}, {"color": "hsl(140, 70%, 50%)", "font": {"color": "white"}, "id": "dioscuri_img_0168.png", "label": "46", "shape": "dot", "title": "dioscuri_img_0168.png"}, {"color": "hsl(230, 70%, 50%)", "font": {"color": "white"}, "id": "dioscuri_archive_0013.png", "label": "55", "shape": "dot", "title": "dioscuri_archive_0013.png"}, {"color": "hsl(30, 70%, 50%)", "font": {"color": "white"}, "id": "dioscuri_img_0297.png", "label": "51", "shape": "dot", "title": "dioscuri_img_0297.png"}, {"color": "hsl(330, 70%, 50%)", "font": {"color": "white"}, "id": "dioscuri_archive_0054.png", "label": "57", "shape": "dot", "title": "dioscuri_archive_0054.png"}, {"color": "hsl(350, 70%, 50%)", "font": {"color": "white"}, "id": "dioscuri_img_0102.png", "label": "43", "shape": "dot", "title": "dioscuri_img_0102.png"}, {"color": "hsl(60, 70%, 50%)", "font": {"color": "white"}, "id": "dioscuri_3dom_fbk_img_1517.png", "label": "30", "shape": "dot", "title": "dioscuri_3dom_fbk_img_1517.png"}, {"color": "hsl(20, 70%, 50%)", "font": {"color": "white"}, "id": "dioscuri_img_0105.png", "label": "58", "shape": "dot", "title": "dioscuri_img_0105.png"}, {"color": "hsl(70, 70%, 50%)", "font": {"color": "white"}, "id": "dioscuri_archive_0025.png", "label": "59", "shape": "dot", "title": "dioscuri_archive_0025.png"}, {"color": "hsl(290, 70%, 50%)", "font": {"color": "white"}, "id": "dioscuri_dioscuria_214.png", "label": "13", "shape": "dot", "title": "dioscuri_dioscuria_214.png"}, {"color": "hsl(140, 70%, 50%)", "font": {"color": "white"}, "id": "dioscuri_img_0152.png", "label": "46", "shape": "dot", "title": "dioscuri_img_0152.png"}, {"color": "hsl(90, 70%, 50%)", "font": {"color": "white"}, "id": "dioscuri_dioscuria_236.png", "label": "45", "shape": "dot", "title": "dioscuri_dioscuria_236.png"}, {"color": "hsl(120, 70%, 50%)", "font": {"color": "white"}, "id": "dioscuri_3dom_fbk_img_1564.png", "label": "24", "shape": "dot", "title": "dioscuri_3dom_fbk_img_1564.png"}, {"color": "hsl(30, 70%, 50%)", "font": {"color": "white"}, "id": "dioscuri_img_0324.png", "label": "51", "shape": "dot", "title": "dioscuri_img_0324.png"}, {"color": "hsl(280, 70%, 50%)", "font": {"color": "white"}, "id": "dioscuri_archive_0008.png", "label": "56", "shape": "dot", "title": "dioscuri_archive_0008.png"}, {"color": "hsl(50, 70%, 50%)", "font": {"color": "white"}, "id": "dioscuri_archive_0003.png", "label": "1", "shape": "dot", "title": "dioscuri_archive_0003.png"}, {"color": "hsl(50, 70%, 50%)", "font": {"color": "white"}, "id": "dioscuri_archive_0030.png", "label": "37", "shape": "dot", "title": "dioscuri_archive_0030.png"}, {"color": "hsl(250, 70%, 50%)", "font": {"color": "white"}, "id": "dioscuri_archive_0001.png", "label": "41", "shape": "dot", "title": "dioscuri_archive_0001.png"}, {"color": "hsl(350, 70%, 50%)", "font": {"color": "white"}, "id": "dioscuri_archive_0010.png", "label": "7", "shape": "dot", "title": "dioscuri_archive_0010.png"}, {"color": "hsl(40, 70%, 50%)", "font": {"color": "white"}, "id": "dioscuri_dioscuria_228.png", "label": "44", "shape": "dot", "title": "dioscuri_dioscuria_228.png"}, {"color": "hsl(250, 70%, 50%)", "font": {"color": "white"}, "id": "dioscuri_img_0353.png", "label": "41", "shape": "dot", "title": "dioscuri_img_0353.png"}, {"color": "hsl(80, 70%, 50%)", "font": {"color": "white"}, "id": "dioscuri_img_0099.png", "label": "52", "shape": "dot", "title": "dioscuri_img_0099.png"}, {"color": "hsl(350, 70%, 50%)", "font": {"color": "white"}, "id": "dioscuri_3dom_fbk_img_1573.png", "label": "43", "shape": "dot", "title": "dioscuri_3dom_fbk_img_1573.png"}, {"color": "hsl(30, 70%, 50%)", "font": {"color": "white"}, "id": "dioscuri_3dom_fbk_img_1565.png", "label": "51", "shape": "dot", "title": "dioscuri_3dom_fbk_img_1565.png"}, {"color": "hsl(60, 70%, 50%)", "font": {"color": "white"}, "id": "dioscuri_3dom_fbk_img_1554.png", "label": "30", "shape": "dot", "title": "dioscuri_3dom_fbk_img_1554.png"}, {"color": "hsl(140, 70%, 50%)", "font": {"color": "white"}, "id": "dioscuri_img_0257.png", "label": "46", "shape": "dot", "title": "dioscuri_img_0257.png"}, {"color": "hsl(100, 70%, 50%)", "font": {"color": "white"}, "id": "dioscuri_3dom_fbk_img_1538.png", "label": "38", "shape": "dot", "title": "dioscuri_3dom_fbk_img_1538.png"}, {"color": "hsl(140, 70%, 50%)", "font": {"color": "white"}, "id": "dioscuri_img_0182.png", "label": "46", "shape": "dot", "title": "dioscuri_img_0182.png"}, {"color": "hsl(140, 70%, 50%)", "font": {"color": "white"}, "id": "dioscuri_img_0055.png", "label": "46", "shape": "dot", "title": "dioscuri_img_0055.png"}]);
+                  edges = new vis.DataSet([{"from": "baalshamin_8100208.png", "to": "baalshamin_19758050972_3e8ee37d98_o.png"}, {"from": "baalshamin_8100208.png", "to": "baalshamin_19758057422_3b2d8bf005_o.png"}, {"from": "baalshamin_8100208.png", "to": "baalshamin_19770034361_ab8a99f3a9_o.png"}, {"from": "baalshamin_8100208.png", "to": "baalshamin_19577300988_4e4ff423a7_o.png"}, {"from": "baalshamin_8100208.png", "to": "baalshamin_palmyra_baalshamin.png"}, {"from": "baalshamin_8100208.png", "to": "baalshamin_palmyr29.png"}, {"from": "baalshamin_8100208.png", "to": "baalshamin_19577310688_5d2e78386b_o.png"}, {"from": "baalshamin_5748.png", "to": "baalshamin_palmyra_baalshamin.png"}, {"from": "baalshamin_5748.png", "to": "baalshamin_19770034361_ab8a99f3a9_o.png"}, {"from": "baalshamin_5748.png", "to": "baalshamin_2316.png"}, {"from": "baalshamin_5748.png", "to": "baalshamin_cimg2282.png"}, {"from": "baalshamin_5747.png", "to": "baalshamin_5740.png"}, {"from": "baalshamin_2316.png", "to": "baalshamin_palmyr29.png"}, {"from": "baalshamin_19875043841_a36e9ccb18_o.png", "to": "baalshamin_19758050972_3e8ee37d98_o.png"}, {"from": "baalshamin_19875043841_a36e9ccb18_o.png", "to": "baalshamin_19577278428_e8044e854b_o.png"}, {"from": "baalshamin_19875043841_a36e9ccb18_o.png", "to": "baalshamin_19144401003_5d0dee05f5_o.png"}, {"from": "baalshamin_19875043841_a36e9ccb18_o.png", "to": "baalshamin_19739156806_e4f69d8792_o.png"}, {"from": "baalshamin_19875043841_a36e9ccb18_o.png", "to": "baalshamin_19739127926_d1f03f70ed_o.png"}, {"from": "baalshamin_19875043841_a36e9ccb18_o.png", "to": "baalshamin_19578696189_92b41b9b79_o.png"}, {"from": "baalshamin_19875043841_a36e9ccb18_o.png", "to": "baalshamin_19577300988_4e4ff423a7_o.png"}, {"from": "baalshamin_19770034361_ab8a99f3a9_o.png", "to": "baalshamin_19739127926_d1f03f70ed_o.png"}, {"from": "baalshamin_19770034361_ab8a99f3a9_o.png", "to": "baalshamin_19758057422_3b2d8bf005_o.png"}, {"from": "baalshamin_19770034361_ab8a99f3a9_o.png", "to": "baalshamin_19758050972_3e8ee37d98_o.png"}, {"from": "baalshamin_19770034361_ab8a99f3a9_o.png", "to": "baalshamin_19577300988_4e4ff423a7_o.png"}, {"from": "baalshamin_19770034361_ab8a99f3a9_o.png", "to": "baalshamin_19577310688_5d2e78386b_o.png"}, {"from": "baalshamin_19770034361_ab8a99f3a9_o.png", "to": "baalshamin_19739156806_e4f69d8792_o.png"}, {"from": "baalshamin_19770034361_ab8a99f3a9_o.png", "to": "baalshamin_palmyra_baalshamin.png"}, {"from": "baalshamin_19770034361_ab8a99f3a9_o.png", "to": "baalshamin_19577278428_e8044e854b_o.png"}, {"from": "baalshamin_19770034361_ab8a99f3a9_o.png", "to": "baalshamin_19578696189_92b41b9b79_o.png"}, {"from": "baalshamin_19770034361_ab8a99f3a9_o.png", "to": "baalshamin_19577313278_bf436a42f4_o.png"}, {"from": "baalshamin_19770034361_ab8a99f3a9_o.png", "to": "baalshamin_19770021361_0a7ef660e2_o.png"}, {"from": "baalshamin_19770021361_0a7ef660e2_o.png", "to": "baalshamin_19765295615_6a8758cc07_o.png"}, {"from": "baalshamin_19770021361_0a7ef660e2_o.png", "to": "baalshamin_19577310688_5d2e78386b_o.png"}, {"from": "baalshamin_19770021361_0a7ef660e2_o.png", "to": "baalshamin_19577300988_4e4ff423a7_o.png"}, {"from": "baalshamin_19770021361_0a7ef660e2_o.png", "to": "baalshamin_19739127926_d1f03f70ed_o.png"}, {"from": "baalshamin_19770021361_0a7ef660e2_o.png", "to": "baalshamin_19758057422_3b2d8bf005_o.png"}, {"from": "baalshamin_19770021361_0a7ef660e2_o.png", "to": "baalshamin_19758050972_3e8ee37d98_o.png"}, {"from": "baalshamin_19765295615_6a8758cc07_o.png", "to": "baalshamin_19739127926_d1f03f70ed_o.png"}, {"from": "baalshamin_19765295615_6a8758cc07_o.png", "to": "baalshamin_19578696189_92b41b9b79_o.png"}, {"from": "baalshamin_19765295615_6a8758cc07_o.png", "to": "baalshamin_19577278428_e8044e854b_o.png"}, {"from": "baalshamin_19765295615_6a8758cc07_o.png", "to": "baalshamin_19758057422_3b2d8bf005_o.png"}, {"from": "baalshamin_19758057422_3b2d8bf005_o.png", "to": "baalshamin_19577300988_4e4ff423a7_o.png"}, {"from": "baalshamin_19758057422_3b2d8bf005_o.png", "to": "baalshamin_19739127926_d1f03f70ed_o.png"}, {"from": "baalshamin_19758057422_3b2d8bf005_o.png", "to": "baalshamin_19577310688_5d2e78386b_o.png"}, {"from": "baalshamin_19758057422_3b2d8bf005_o.png", "to": "baalshamin_19758050972_3e8ee37d98_o.png"}, {"from": "baalshamin_19758057422_3b2d8bf005_o.png", "to": "baalshamin_19578696189_92b41b9b79_o.png"}, {"from": "baalshamin_19758050972_3e8ee37d98_o.png", "to": "baalshamin_19577310688_5d2e78386b_o.png"}, {"from": "baalshamin_19758050972_3e8ee37d98_o.png", "to": "baalshamin_182z.png"}, {"from": "baalshamin_19758050972_3e8ee37d98_o.png", "to": "baalshamin_palmyra_baalshamin.png"}, {"from": "baalshamin_19758050972_3e8ee37d98_o.png", "to": "baalshamin_19739156806_e4f69d8792_o.png"}, {"from": "baalshamin_19758050972_3e8ee37d98_o.png", "to": "baalshamin_19577313278_bf436a42f4_o.png"}, {"from": "baalshamin_19758050972_3e8ee37d98_o.png", "to": "baalshamin_19578696189_92b41b9b79_o.png"}, {"from": "baalshamin_19758050972_3e8ee37d98_o.png", "to": "baalshamin_19577300988_4e4ff423a7_o.png"}, {"from": "baalshamin_19758050972_3e8ee37d98_o.png", "to": "baalshamin_19577278428_e8044e854b_o.png"}, {"from": "baalshamin_19758050972_3e8ee37d98_o.png", "to": "baalshamin_19739127926_d1f03f70ed_o.png"}, {"from": "baalshamin_85328479_89f3b31dfa_o.png", "to": "baalshamin_dscn2022.png"}, {"from": "baalshamin_palmyra_baalshamin.png", "to": "baalshamin_19577300988_4e4ff423a7_o.png"}, {"from": "baalshamin_palmyra_baalshamin.png", "to": "baalshamin_19739156806_e4f69d8792_o.png"}, {"from": "baalshamin_palmyra_baalshamin.png", "to": "baalshamin_palmyr29.png"}, {"from": "baalshamin_palmyra_baalshamin.png", "to": "baalshamin_hpim3190.png"}, {"from": "baalshamin_palmyra_baalshamin.png", "to": "baalshamin_182z.png"}, {"from": "baalshamin_palmyra_baalshamin.png", "to": "baalshamin_19577313278_bf436a42f4_o.png"}, {"from": "baalshamin_182z.png", "to": "baalshamin_19577300988_4e4ff423a7_o.png"}, {"from": "baalshamin_182z.png", "to": "baalshamin_194d.png"}, {"from": "baalshamin_19144401003_5d0dee05f5_o.png", "to": "baalshamin_19578696189_92b41b9b79_o.png"}, {"from": "baalshamin_19144401003_5d0dee05f5_o.png", "to": "baalshamin_19739127926_d1f03f70ed_o.png"}, {"from": "baalshamin_194d.png", "to": "baalshamin_dscn2064.png"}, {"from": "baalshamin_194d.png", "to": "baalshamin_hpim3190.png"}, {"from": "baalshamin_19577278428_e8044e854b_o.png", "to": "baalshamin_19739156806_e4f69d8792_o.png"}, {"from": "baalshamin_19577278428_e8044e854b_o.png", "to": "baalshamin_19578696189_92b41b9b79_o.png"}, {"from": "baalshamin_19577278428_e8044e854b_o.png", "to": "baalshamin_19577300988_4e4ff423a7_o.png"}, {"from": "baalshamin_19577278428_e8044e854b_o.png", "to": "baalshamin_dscf4498.png"}, {"from": "baalshamin_19577278428_e8044e854b_o.png", "to": "baalshamin_19739127926_d1f03f70ed_o.png"}, {"from": "baalshamin_19577300988_4e4ff423a7_o.png", "to": "baalshamin_19578696189_92b41b9b79_o.png"}, {"from": "baalshamin_19577300988_4e4ff423a7_o.png", "to": "baalshamin_19739127926_d1f03f70ed_o.png"}, {"from": "baalshamin_19577300988_4e4ff423a7_o.png", "to": "baalshamin_19739156806_e4f69d8792_o.png"}, {"from": "baalshamin_19577300988_4e4ff423a7_o.png", "to": "baalshamin_19577310688_5d2e78386b_o.png"}, {"from": "baalshamin_19577300988_4e4ff423a7_o.png", "to": "baalshamin_19577313278_bf436a42f4_o.png"}, {"from": "baalshamin_19577310688_5d2e78386b_o.png", "to": "baalshamin_19577313278_bf436a42f4_o.png"}, {"from": "baalshamin_19577310688_5d2e78386b_o.png", "to": "baalshamin_19739156806_e4f69d8792_o.png"}, {"from": "baalshamin_19577313278_bf436a42f4_o.png", "to": "baalshamin_dscn2066.png"}, {"from": "baalshamin_19577313278_bf436a42f4_o.png", "to": "baalshamin_19739156806_e4f69d8792_o.png"}, {"from": "baalshamin_19578696189_92b41b9b79_o.png", "to": "baalshamin_19739127926_d1f03f70ed_o.png"}, {"from": "baalshamin_19578696189_92b41b9b79_o.png", "to": "baalshamin_19739156806_e4f69d8792_o.png"}, {"from": "baalshamin_19578696189_92b41b9b79_o.png", "to": "baalshamin_dscf4498.png"}, {"from": "baalshamin_19739127926_d1f03f70ed_o.png", "to": "baalshamin_19739156806_e4f69d8792_o.png"}, {"from": "baalshamin_cimg2278.png", "to": "baalshamin_pict0818.png"}, {"from": "baalshamin_cimg2278.png", "to": "baalshamin_cimg2282.png"}, {"from": "baalshamin_cimg2282.png", "to": "baalshamin_pict0818.png"}, {"from": "baalshamin_dsc01926.png", "to": "baalshamin_dscf4498.png"}, {"from": "baalshamin_dsc01926.png", "to": "baalshamin_dscn2065.png"}, {"from": "baalshamin_dsc01926.png", "to": "baalshamin_dscn2064.png"}, {"from": "baalshamin_dsc01926.png", "to": "baalshamin_dscf4501.png"}, {"from": "baalshamin_dsc01926.png", "to": "baalshamin_img_1145.png"}, {"from": "baalshamin_dscf4498.png", "to": "baalshamin_dscn2064.png"}, {"from": "baalshamin_dscf4498.png", "to": "baalshamin_dscn2034.png"}, {"from": "baalshamin_dscf4498.png", "to": "baalshamin_dscf4501.png"}, {"from": "baalshamin_dscf4501.png", "to": "baalshamin_dscn2034.png"}, {"from": "baalshamin_dscf4501.png", "to": "baalshamin_dscn2064.png"}, {"from": "baalshamin_dscf4501.png", "to": "baalshamin_dscn2063.png"}, {"from": "baalshamin_dscf4501.png", "to": "baalshamin_dscn2065.png"}, {"from": "baalshamin_dscf4501.png", "to": "baalshamin_img_1145.png"}, {"from": "baalshamin_dscn2009.png", "to": "baalshamin_dscn2034.png"}, {"from": "baalshamin_dscn2027.png", "to": "baalshamin_palmyr29.png"}, {"from": "baalshamin_dscn2034.png", "to": "baalshamin_dscn2063.png"}, {"from": "baalshamin_dscn2034.png", "to": "baalshamin_dscn2065.png"}, {"from": "baalshamin_dscn2063.png", "to": "baalshamin_dscn2065.png"}, {"from": "baalshamin_dscn2063.png", "to": "baalshamin_dscn2064.png"}, {"from": "baalshamin_dscn2064.png", "to": "baalshamin_hpim3190.png"}, {"from": "baalshamin_dscn2064.png", "to": "baalshamin_dscn2065.png"}, {"from": "outliers_39500842_567338329.png", "to": "outliers_27039750_8082864097.png"}, {"from": "outliers_39500842_567338329.png", "to": "outliers_29622692_8024707719.png"}, {"from": "outliers_39500842_567338329.png", "to": "outliers_21013750_3810761207.png"}, {"from": "outliers_39500842_567338329.png", "to": "outliers_46207490_2755733467.png"}, {"from": "outliers_39500842_567338329.png", "to": "outliers_23943395_7008829683.png"}, {"from": "outliers_39500842_567338329.png", "to": "outliers_30202749_4422920822.png"}, {"from": "outliers_15001797_2073024252.png", "to": "outliers_37941822_4613817560.png"}, {"from": "outliers_15001797_2073024252.png", "to": "outliers_15108470_13126668493.png"}, {"from": "outliers_15108470_13126668493.png", "to": "outliers_29709706_5736365308.png"}, {"from": "outliers_15108470_13126668493.png", "to": "outliers_25259690_2957362243.png"}, {"from": "outliers_15108470_13126668493.png", "to": "outliers_37941822_4613817560.png"}, {"from": "outliers_16939073_1562031964.png", "to": "outliers_29622692_8024707719.png"}, {"from": "outliers_16939073_1562031964.png", "to": "outliers_23943395_7008829683.png"}, {"from": "outliers_16939073_1562031964.png", "to": "outliers_21013750_3810761207.png"}, {"from": "outliers_16939073_1562031964.png", "to": "outliers_30202749_4422920822.png"}, {"from": "outliers_16939073_1562031964.png", "to": "outliers_46207490_2755733467.png"}, {"from": "outliers_17617215_8679921663.png", "to": "outliers_29709706_5736365308.png"}, {"from": "outliers_21013750_3810761207.png", "to": "outliers_23943395_7008829683.png"}, {"from": "outliers_21013750_3810761207.png", "to": "outliers_46207490_2755733467.png"}, {"from": "outliers_21013750_3810761207.png", "to": "outliers_30202749_4422920822.png"}, {"from": "outliers_21013750_3810761207.png", "to": "outliers_29622692_8024707719.png"}, {"from": "outliers_21013750_3810761207.png", "to": "outliers_27039750_8082864097.png"}, {"from": "outliers_22219055_9555156398.png", "to": "outliers_22516075_5997990597.png"}, {"from": "outliers_22219055_9555156398.png", "to": "outliers_36840190_2262283891.png"}, {"from": "outliers_22219055_9555156398.png", "to": "outliers_25182601_5963423001.png"}, {"from": "outliers_22219055_9555156398.png", "to": "outliers_32208117_4023556230.png"}, {"from": "outliers_22219055_9555156398.png", "to": "outliers_25404198_10162152833.png"}, {"from": "outliers_22516075_5997990597.png", "to": "outliers_25404198_10162152833.png"}, {"from": "outliers_22516075_5997990597.png", "to": "outliers_36840190_2262283891.png"}, {"from": "outliers_22516075_5997990597.png", "to": "outliers_25182601_5963423001.png"}, {"from": "outliers_23943395_7008829683.png", "to": "outliers_30202749_4422920822.png"}, {"from": "outliers_23943395_7008829683.png", "to": "outliers_25404198_10162152833.png"}, {"from": "outliers_23943395_7008829683.png", "to": "outliers_46207490_2755733467.png"}, {"from": "outliers_23943395_7008829683.png", "to": "outliers_29622692_8024707719.png"}, {"from": "outliers_23943395_7008829683.png", "to": "outliers_27039750_8082864097.png"}, {"from": "outliers_25182601_5963423001.png", "to": "outliers_25404198_10162152833.png"}, {"from": "outliers_25182601_5963423001.png", "to": "outliers_32208117_4023556230.png"}, {"from": "outliers_25259690_2957362243.png", "to": "outliers_29709706_5736365308.png"}, {"from": "outliers_25259690_2957362243.png", "to": "outliers_37941822_4613817560.png"}, {"from": "outliers_25404198_10162152833.png", "to": "outliers_27039750_8082864097.png"}, {"from": "outliers_25404198_10162152833.png", "to": "outliers_29622692_8024707719.png"}, {"from": "outliers_25404198_10162152833.png", "to": "outliers_30202749_4422920822.png"}, {"from": "outliers_27039750_8082864097.png", "to": "outliers_29622692_8024707719.png"}, {"from": "outliers_27039750_8082864097.png", "to": "outliers_30202749_4422920822.png"}, {"from": "outliers_29622692_8024707719.png", "to": "outliers_30202749_4422920822.png"}, {"from": "outliers_29622692_8024707719.png", "to": "outliers_46207490_2755733467.png"}, {"from": "outliers_29709706_5736365308.png", "to": "outliers_37941822_4613817560.png"}, {"from": "outliers_30202749_4422920822.png", "to": "outliers_46207490_2755733467.png"}, {"from": "dioscuri_3dom_fbk_img_1512.png", "to": "dioscuri_3dom_fbk_img_1554.png"}, {"from": "dioscuri_3dom_fbk_img_1512.png", "to": "dioscuri_3dom_fbk_img_1517.png"}, {"from": "dioscuri_dioscuria_161.png", "to": "dioscuri_dioscuria_147.png"}, {"from": "dioscuri_dioscuria_161.png", "to": "dioscuri_dioscuria_154.png"}, {"from": "dioscuri_img_0409.png", "to": "dioscuri_img_0133.png"}, {"from": "dioscuri_img_0409.png", "to": "dioscuri_img_0391.png"}, {"from": "dioscuri_3dom_fbk_img_1542.png", "to": "dioscuri_3dom_fbk_img_1538.png"}, {"from": "dioscuri_archive_0004.png", "to": "dioscuri_archive_0230.png"}, {"from": "dioscuri_archive_0005.png", "to": "dioscuri_img_0353.png"}, {"from": "dioscuri_archive_0005.png", "to": "dioscuri_archive_0001.png"}, {"from": "dioscuri_img_0119.png", "to": "dioscuri_img_0102.png"}, {"from": "dioscuri_img_0119.png", "to": "dioscuri_3dom_fbk_img_1573.png"}, {"from": "dioscuri_3dom_fbk_img_1571.png", "to": "dioscuri_3dom_fbk_img_1573.png"}, {"from": "dioscuri_archive_0057.png", "to": "dioscuri_archive_0001.png"}, {"from": "dioscuri_img_0391.png", "to": "dioscuri_img_0336.png"}, {"from": "dioscuri_img_0391.png", "to": "dioscuri_img_0362.png"}, {"from": "dioscuri_img_0362.png", "to": "dioscuri_img_0324.png"}, {"from": "dioscuri_img_0362.png", "to": "dioscuri_img_0311.png"}, {"from": "dioscuri_img_0362.png", "to": "dioscuri_img_0336.png"}, {"from": "dioscuri_dioscuria_147.png", "to": "dioscuri_dioscuria_154.png"}, {"from": "dioscuri_img_0244.png", "to": "dioscuri_img_0257.png"}, {"from": "dioscuri_img_0219.png", "to": "dioscuri_img_0207.png"}, {"from": "dioscuri_img_0219.png", "to": "dioscuri_img_0297.png"}, {"from": "dioscuri_img_0107.png", "to": "dioscuri_img_0461.png"}, {"from": "dioscuri_img_0272.png", "to": "dioscuri_img_0207.png"}, {"from": "dioscuri_img_0311.png", "to": "dioscuri_img_0297.png"}, {"from": "dioscuri_img_0311.png", "to": "dioscuri_img_0336.png"}, {"from": "dioscuri_img_0311.png", "to": "dioscuri_img_0324.png"}, {"from": "dioscuri_img_0075.png", "to": "dioscuri_img_0099.png"}, {"from": "dioscuri_archive_0015.png", "to": "dioscuri_archive_0013.png"}, {"from": "dioscuri_img_0336.png", "to": "dioscuri_img_0297.png"}, {"from": "dioscuri_img_0336.png", "to": "dioscuri_img_0324.png"}, {"from": "dioscuri_img_0336.png", "to": "dioscuri_3dom_fbk_img_1565.png"}, {"from": "dioscuri_img_0168.png", "to": "dioscuri_img_0055.png"}, {"from": "dioscuri_img_0168.png", "to": "dioscuri_img_0152.png"}, {"from": "dioscuri_img_0168.png", "to": "dioscuri_img_0182.png"}, {"from": "dioscuri_img_0297.png", "to": "dioscuri_img_0324.png"}, {"from": "dioscuri_img_0102.png", "to": "dioscuri_3dom_fbk_img_1573.png"}, {"from": "dioscuri_img_0152.png", "to": "dioscuri_img_0055.png"}, {"from": "dioscuri_img_0152.png", "to": "dioscuri_img_0257.png"}, {"from": "dioscuri_img_0257.png", "to": "dioscuri_img_0182.png"}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+                      network.on("stabilizationProgress", function(params) {
+                          document.getElementById('loadingBar').removeAttribute("style");
+                          var maxWidth = 496;
+                          var minWidth = 20;
+                          var widthFactor = params.iterations/params.total;
+                          var width = Math.max(minWidth,maxWidth * widthFactor);
+                          document.getElementById('bar').style.width = width + 'px';
+                          document.getElementById('text').innerHTML = Math.round(widthFactor*100) + '%';
+                      });
+                      network.once("stabilizationIterationsDone", function() {
+                          document.getElementById('text').innerHTML = '100%';
+                          document.getElementById('bar').style.width = '496px';
+                          document.getElementById('loadingBar').style.opacity = 0;
+                          // really clean the dom element
+                          setTimeout(function () {document.getElementById('loadingBar').style.display = 'none';}, 500);
+                      });
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

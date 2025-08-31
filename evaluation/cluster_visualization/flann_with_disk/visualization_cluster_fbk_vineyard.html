@@ -1,0 +1,250 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 750px;
+                 background-color: #222222;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+             #loadingBar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width: 100%;
+                 height: 750px;
+                 background-color:rgba(200,200,200,0.8);
+                 -webkit-transition: all 0.5s ease;
+                 -moz-transition: all 0.5s ease;
+                 -ms-transition: all 0.5s ease;
+                 -o-transition: all 0.5s ease;
+                 transition: all 0.5s ease;
+                 opacity:1;
+             }
+
+             #bar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width:20px;
+                 height:20px;
+                 margin:auto auto auto auto;
+                 border-radius:11px;
+                 border:2px solid rgba(30,30,30,0.05);
+                 background: rgb(0, 173, 246); /* Old browsers */
+                 box-shadow: 2px 0px 4px rgba(0,0,0,0.4);
+             }
+
+             #border {
+                 position:absolute;
+                 top:10px;
+                 left:10px;
+                 width:500px;
+                 height:23px;
+                 margin:auto auto auto auto;
+                 box-shadow: 0px 0px 4px rgba(0,0,0,0.2);
+                 border-radius:10px;
+             }
+
+             #text {
+                 position:absolute;
+                 top:8px;
+                 left:530px;
+                 width:30px;
+                 height:50px;
+                 margin:auto auto auto auto;
+                 font-size:22px;
+                 color: #000000;
+             }
+
+             div.outerBorder {
+                 position:relative;
+                 top:400px;
+                 width:600px;
+                 height:44px;
+                 margin:auto auto auto auto;
+                 border:8px solid rgba(0,0,0,0.1);
+                 background: rgb(252,252,252); /* Old browsers */
+                 background: -moz-linear-gradient(top,  rgba(252,252,252,1) 0%, rgba(237,237,237,1) 100%); /* FF3.6+ */
+                 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(252,252,252,1)), color-stop(100%,rgba(237,237,237,1))); /* Chrome,Safari4+ */
+                 background: -webkit-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Chrome10+,Safari5.1+ */
+                 background: -o-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Opera 11.10+ */
+                 background: -ms-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* IE10+ */
+                 background: linear-gradient(to bottom,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* W3C */
+                 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfcfc', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */
+                 border-radius:72px;
+                 box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+             }
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+            <div id="loadingBar">
+              <div class="outerBorder">
+                <div id="text">0%</div>
+                <div id="border">
+                  <div id="bar"></div>
+                </div>
+              </div>
+            </div>
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "hsl(0, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_2_frame_1260.png", "label": "0", "shape": "dot", "title": "vineyard_split_2_frame_1260.png"}, {"color": "hsl(50, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_2_frame_1225.png", "label": "1", "shape": "dot", "title": "vineyard_split_2_frame_1225.png"}, {"color": "hsl(100, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_2_frame_1245.png", "label": "2", "shape": "dot", "title": "vineyard_split_2_frame_1245.png"}, {"color": "hsl(150, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_2_frame_1320.png", "label": "3", "shape": "dot", "title": "vineyard_split_2_frame_1320.png"}, {"color": "hsl(200, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_2_frame_1205.png", "label": "4", "shape": "dot", "title": "vineyard_split_2_frame_1205.png"}, {"color": "hsl(100, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_2_frame_1240.png", "label": "2", "shape": "dot", "title": "vineyard_split_2_frame_1240.png"}, {"color": "hsl(250, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_2_frame_1170.png", "label": "5", "shape": "dot", "title": "vineyard_split_2_frame_1170.png"}, {"color": "hsl(350, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_2_frame_1300.png", "label": "7", "shape": "dot", "title": "vineyard_split_2_frame_1300.png"}, {"color": "hsl(350, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_2_frame_1290.png", "label": "7", "shape": "dot", "title": "vineyard_split_2_frame_1290.png"}, {"color": "hsl(350, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_2_frame_1310.png", "label": "7", "shape": "dot", "title": "vineyard_split_2_frame_1310.png"}, {"color": "hsl(40, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_2_frame_1200.png", "label": "8", "shape": "dot", "title": "vineyard_split_2_frame_1200.png"}, {"color": "hsl(350, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_2_frame_1295.png", "label": "7", "shape": "dot", "title": "vineyard_split_2_frame_1295.png"}, {"color": "hsl(90, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_2_frame_1180.png", "label": "9", "shape": "dot", "title": "vineyard_split_2_frame_1180.png"}, {"color": "hsl(0, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_2_frame_1255.png", "label": "0", "shape": "dot", "title": "vineyard_split_2_frame_1255.png"}, {"color": "hsl(50, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_2_frame_1220.png", "label": "1", "shape": "dot", "title": "vineyard_split_2_frame_1220.png"}, {"color": "hsl(250, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_2_frame_1165.png", "label": "5", "shape": "dot", "title": "vineyard_split_2_frame_1165.png"}, {"color": "hsl(140, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_2_frame_1275.png", "label": "10", "shape": "dot", "title": "vineyard_split_2_frame_1275.png"}, {"color": "hsl(350, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_2_frame_1305.png", "label": "7", "shape": "dot", "title": "vineyard_split_2_frame_1305.png"}, {"color": "hsl(250, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_2_frame_1160.png", "label": "5", "shape": "dot", "title": "vineyard_split_2_frame_1160.png"}, {"color": "hsl(140, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_2_frame_1280.png", "label": "10", "shape": "dot", "title": "vineyard_split_2_frame_1280.png"}, {"color": "hsl(190, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_2_frame_1155.png", "label": "11", "shape": "dot", "title": "vineyard_split_2_frame_1155.png"}, {"color": "hsl(40, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_2_frame_1195.png", "label": "8", "shape": "dot", "title": "vineyard_split_2_frame_1195.png"}, {"color": "hsl(40, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_2_frame_1190.png", "label": "8", "shape": "dot", "title": "vineyard_split_2_frame_1190.png"}, {"color": "hsl(0, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_2_frame_1270.png", "label": "0", "shape": "dot", "title": "vineyard_split_2_frame_1270.png"}, {"color": "hsl(200, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_2_frame_1210.png", "label": "4", "shape": "dot", "title": "vineyard_split_2_frame_1210.png"}, {"color": "hsl(290, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_2_frame_1250.png", "label": "13", "shape": "dot", "title": "vineyard_split_2_frame_1250.png"}, {"color": "hsl(40, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_2_frame_1185.png", "label": "8", "shape": "dot", "title": "vineyard_split_2_frame_1185.png"}, {"color": "hsl(140, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_2_frame_1285.png", "label": "10", "shape": "dot", "title": "vineyard_split_2_frame_1285.png"}, {"color": "hsl(0, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_2_frame_1265.png", "label": "0", "shape": "dot", "title": "vineyard_split_2_frame_1265.png"}, {"color": "hsl(190, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_2_frame_1150.png", "label": "11", "shape": "dot", "title": "vineyard_split_2_frame_1150.png"}, {"color": "hsl(250, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_2_frame_1175.png", "label": "5", "shape": "dot", "title": "vineyard_split_2_frame_1175.png"}, {"color": "hsl(100, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_2_frame_1235.png", "label": "2", "shape": "dot", "title": "vineyard_split_2_frame_1235.png"}, {"color": "hsl(350, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_2_frame_1315.png", "label": "7", "shape": "dot", "title": "vineyard_split_2_frame_1315.png"}, {"color": "hsl(100, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_2_frame_1230.png", "label": "2", "shape": "dot", "title": "vineyard_split_2_frame_1230.png"}, {"color": "hsl(200, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_2_frame_1215.png", "label": "4", "shape": "dot", "title": "vineyard_split_2_frame_1215.png"}, {"color": "hsl(340, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_1395.png", "label": "14", "shape": "dot", "title": "vineyard_split_3_frame_1395.png"}, {"color": "hsl(230, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_1475.png", "label": "19", "shape": "dot", "title": "vineyard_split_3_frame_1475.png"}, {"color": "hsl(120, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_0255.png", "label": "24", "shape": "dot", "title": "vineyard_split_3_frame_0255.png"}, {"color": "hsl(130, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_1425.png", "label": "17", "shape": "dot", "title": "vineyard_split_3_frame_1425.png"}, {"color": "hsl(180, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_0125.png", "label": "18", "shape": "dot", "title": "vineyard_split_3_frame_0125.png"}, {"color": "hsl(230, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_1480.png", "label": "19", "shape": "dot", "title": "vineyard_split_3_frame_1480.png"}, {"color": "hsl(100, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_0215.png", "label": "38", "shape": "dot", "title": "vineyard_split_3_frame_0215.png"}, {"color": "hsl(260, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_0295.png", "label": "34", "shape": "dot", "title": "vineyard_split_3_frame_0295.png"}, {"color": "hsl(160, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_0090.png", "label": "32", "shape": "dot", "title": "vineyard_split_3_frame_0090.png"}, {"color": "hsl(200, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_0190.png", "label": "40", "shape": "dot", "title": "vineyard_split_3_frame_0190.png"}, {"color": "hsl(120, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_0265.png", "label": "24", "shape": "dot", "title": "vineyard_split_3_frame_0265.png"}, {"color": "hsl(170, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_1445.png", "label": "25", "shape": "dot", "title": "vineyard_split_3_frame_1445.png"}, {"color": "hsl(260, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_0290.png", "label": "34", "shape": "dot", "title": "vineyard_split_3_frame_0290.png"}, {"color": "hsl(220, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_1450.png", "label": "26", "shape": "dot", "title": "vineyard_split_3_frame_1450.png"}, {"color": "hsl(270, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_1390.png", "label": "27", "shape": "dot", "title": "vineyard_split_3_frame_1390.png"}, {"color": "hsl(320, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_1555.png", "label": "28", "shape": "dot", "title": "vineyard_split_3_frame_1555.png"}, {"color": "hsl(320, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_1550.png", "label": "28", "shape": "dot", "title": "vineyard_split_3_frame_1550.png"}, {"color": "hsl(10, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_0145.png", "label": "29", "shape": "dot", "title": "vineyard_split_3_frame_0145.png"}, {"color": "hsl(340, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_1405.png", "label": "14", "shape": "dot", "title": "vineyard_split_3_frame_1405.png"}, {"color": "hsl(60, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_0070.png", "label": "30", "shape": "dot", "title": "vineyard_split_3_frame_0070.png"}, {"color": "hsl(310, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_1500.png", "label": "35", "shape": "dot", "title": "vineyard_split_3_frame_1500.png"}, {"color": "hsl(220, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_1455.png", "label": "26", "shape": "dot", "title": "vineyard_split_3_frame_1455.png"}, {"color": "hsl(160, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_0075.png", "label": "32", "shape": "dot", "title": "vineyard_split_3_frame_0075.png"}, {"color": "hsl(10, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_0160.png", "label": "29", "shape": "dot", "title": "vineyard_split_3_frame_0160.png"}, {"color": "hsl(10, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_0150.png", "label": "29", "shape": "dot", "title": "vineyard_split_3_frame_0150.png"}, {"color": "hsl(10, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_0140.png", "label": "29", "shape": "dot", "title": "vineyard_split_3_frame_0140.png"}, {"color": "hsl(120, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_0270.png", "label": "24", "shape": "dot", "title": "vineyard_split_3_frame_0270.png"}, {"color": "hsl(10, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_0170.png", "label": "29", "shape": "dot", "title": "vineyard_split_3_frame_0170.png"}, {"color": "hsl(260, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_0285.png", "label": "34", "shape": "dot", "title": "vineyard_split_3_frame_0285.png"}, {"color": "hsl(310, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_1490.png", "label": "35", "shape": "dot", "title": "vineyard_split_3_frame_1490.png"}, {"color": "hsl(260, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_0280.png", "label": "34", "shape": "dot", "title": "vineyard_split_3_frame_0280.png"}, {"color": "hsl(120, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_0275.png", "label": "24", "shape": "dot", "title": "vineyard_split_3_frame_0275.png"}, {"color": "hsl(100, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_0225.png", "label": "38", "shape": "dot", "title": "vineyard_split_3_frame_0225.png"}, {"color": "hsl(160, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_0080.png", "label": "32", "shape": "dot", "title": "vineyard_split_3_frame_0080.png"}, {"color": "hsl(120, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_0250.png", "label": "24", "shape": "dot", "title": "vineyard_split_3_frame_0250.png"}, {"color": "hsl(310, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_1495.png", "label": "35", "shape": "dot", "title": "vineyard_split_3_frame_1495.png"}, {"color": "hsl(180, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_0120.png", "label": "18", "shape": "dot", "title": "vineyard_split_3_frame_0120.png"}, {"color": "hsl(310, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_1510.png", "label": "35", "shape": "dot", "title": "vineyard_split_3_frame_1510.png"}, {"color": "hsl(180, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_0105.png", "label": "18", "shape": "dot", "title": "vineyard_split_3_frame_0105.png"}, {"color": "hsl(50, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_1535.png", "label": "37", "shape": "dot", "title": "vineyard_split_3_frame_1535.png"}, {"color": "hsl(50, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_1540.png", "label": "37", "shape": "dot", "title": "vineyard_split_3_frame_1540.png"}, {"color": "hsl(100, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_0205.png", "label": "38", "shape": "dot", "title": "vineyard_split_3_frame_0205.png"}, {"color": "hsl(150, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_1410.png", "label": "39", "shape": "dot", "title": "vineyard_split_3_frame_1410.png"}, {"color": "hsl(260, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_0305.png", "label": "34", "shape": "dot", "title": "vineyard_split_3_frame_0305.png"}, {"color": "hsl(120, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_0235.png", "label": "24", "shape": "dot", "title": "vineyard_split_3_frame_0235.png"}, {"color": "hsl(310, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_1505.png", "label": "35", "shape": "dot", "title": "vineyard_split_3_frame_1505.png"}, {"color": "hsl(10, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_0175.png", "label": "29", "shape": "dot", "title": "vineyard_split_3_frame_0175.png"}, {"color": "hsl(50, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_1545.png", "label": "37", "shape": "dot", "title": "vineyard_split_3_frame_1545.png"}, {"color": "hsl(300, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_1520.png", "label": "42", "shape": "dot", "title": "vineyard_split_3_frame_1520.png"}, {"color": "hsl(210, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_1465.png", "label": "33", "shape": "dot", "title": "vineyard_split_3_frame_1465.png"}, {"color": "hsl(0, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_1525.png", "label": "36", "shape": "dot", "title": "vineyard_split_3_frame_1525.png"}, {"color": "hsl(180, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_0110.png", "label": "18", "shape": "dot", "title": "vineyard_split_3_frame_0110.png"}, {"color": "hsl(200, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_0195.png", "label": "40", "shape": "dot", "title": "vineyard_split_3_frame_0195.png"}, {"color": "hsl(300, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_1570.png", "label": "6", "shape": "dot", "title": "vineyard_split_3_frame_1570.png"}, {"color": "hsl(100, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_0210.png", "label": "38", "shape": "dot", "title": "vineyard_split_3_frame_0210.png"}, {"color": "hsl(160, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_0100.png", "label": "32", "shape": "dot", "title": "vineyard_split_3_frame_0100.png"}, {"color": "hsl(300, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_1560.png", "label": "6", "shape": "dot", "title": "vineyard_split_3_frame_1560.png"}, {"color": "hsl(130, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_1430.png", "label": "17", "shape": "dot", "title": "vineyard_split_3_frame_1430.png"}, {"color": "hsl(120, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_0245.png", "label": "24", "shape": "dot", "title": "vineyard_split_3_frame_0245.png"}, {"color": "hsl(180, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_0130.png", "label": "18", "shape": "dot", "title": "vineyard_split_3_frame_0130.png"}, {"color": "hsl(180, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_0135.png", "label": "18", "shape": "dot", "title": "vineyard_split_3_frame_0135.png"}, {"color": "hsl(100, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_0220.png", "label": "38", "shape": "dot", "title": "vineyard_split_3_frame_0220.png"}, {"color": "hsl(200, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_0200.png", "label": "40", "shape": "dot", "title": "vineyard_split_3_frame_0200.png"}, {"color": "hsl(170, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_1440.png", "label": "25", "shape": "dot", "title": "vineyard_split_3_frame_1440.png"}, {"color": "hsl(120, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_0240.png", "label": "24", "shape": "dot", "title": "vineyard_split_3_frame_0240.png"}, {"color": "hsl(210, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_1460.png", "label": "33", "shape": "dot", "title": "vineyard_split_3_frame_1460.png"}, {"color": "hsl(310, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_1515.png", "label": "35", "shape": "dot", "title": "vineyard_split_3_frame_1515.png"}, {"color": "hsl(10, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_0165.png", "label": "29", "shape": "dot", "title": "vineyard_split_3_frame_0165.png"}, {"color": "hsl(120, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_0230.png", "label": "24", "shape": "dot", "title": "vineyard_split_3_frame_0230.png"}, {"color": "hsl(200, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_0185.png", "label": "40", "shape": "dot", "title": "vineyard_split_3_frame_0185.png"}, {"color": "hsl(340, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_1400.png", "label": "14", "shape": "dot", "title": "vineyard_split_3_frame_1400.png"}, {"color": "hsl(150, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_1415.png", "label": "39", "shape": "dot", "title": "vineyard_split_3_frame_1415.png"}, {"color": "hsl(130, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_1435.png", "label": "17", "shape": "dot", "title": "vineyard_split_3_frame_1435.png"}, {"color": "hsl(120, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_0260.png", "label": "24", "shape": "dot", "title": "vineyard_split_3_frame_0260.png"}, {"color": "hsl(180, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_0115.png", "label": "18", "shape": "dot", "title": "vineyard_split_3_frame_0115.png"}, {"color": "hsl(150, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_1420.png", "label": "39", "shape": "dot", "title": "vineyard_split_3_frame_1420.png"}, {"color": "hsl(260, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_0300.png", "label": "34", "shape": "dot", "title": "vineyard_split_3_frame_0300.png"}, {"color": "hsl(230, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_1485.png", "label": "19", "shape": "dot", "title": "vineyard_split_3_frame_1485.png"}, {"color": "hsl(160, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_0085.png", "label": "32", "shape": "dot", "title": "vineyard_split_3_frame_0085.png"}, {"color": "hsl(160, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_0095.png", "label": "32", "shape": "dot", "title": "vineyard_split_3_frame_0095.png"}, {"color": "hsl(10, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_0155.png", "label": "29", "shape": "dot", "title": "vineyard_split_3_frame_0155.png"}, {"color": "hsl(200, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_0180.png", "label": "40", "shape": "dot", "title": "vineyard_split_3_frame_0180.png"}, {"color": "hsl(0, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_1530.png", "label": "36", "shape": "dot", "title": "vineyard_split_3_frame_1530.png"}, {"color": "hsl(230, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_1470.png", "label": "19", "shape": "dot", "title": "vineyard_split_3_frame_1470.png"}, {"color": "hsl(300, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_3_frame_1565.png", "label": "6", "shape": "dot", "title": "vineyard_split_3_frame_1565.png"}, {"color": "hsl(250, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_1_frame_0950.png", "label": "41", "shape": "dot", "title": "vineyard_split_1_frame_0950.png"}, {"color": "hsl(240, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_1_frame_1005.png", "label": "12", "shape": "dot", "title": "vineyard_split_1_frame_1005.png"}, {"color": "hsl(30, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_1_frame_0915.png", "label": "15", "shape": "dot", "title": "vineyard_split_1_frame_0915.png"}, {"color": "hsl(240, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_1_frame_0995.png", "label": "12", "shape": "dot", "title": "vineyard_split_1_frame_0995.png"}, {"color": "hsl(70, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_1_frame_1070.png", "label": "23", "shape": "dot", "title": "vineyard_split_1_frame_1070.png"}, {"color": "hsl(110, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_1_frame_1015.png", "label": "31", "shape": "dot", "title": "vineyard_split_1_frame_1015.png"}, {"color": "hsl(280, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_1_frame_0990.png", "label": "20", "shape": "dot", "title": "vineyard_split_1_frame_0990.png"}, {"color": "hsl(70, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_1_frame_1055.png", "label": "23", "shape": "dot", "title": "vineyard_split_1_frame_1055.png"}, {"color": "hsl(250, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_1_frame_0965.png", "label": "41", "shape": "dot", "title": "vineyard_split_1_frame_0965.png"}, {"color": "hsl(330, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_1_frame_0935.png", "label": "21", "shape": "dot", "title": "vineyard_split_1_frame_0935.png"}, {"color": "hsl(280, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_1_frame_0970.png", "label": "20", "shape": "dot", "title": "vineyard_split_1_frame_0970.png"}, {"color": "hsl(250, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_1_frame_0960.png", "label": "41", "shape": "dot", "title": "vineyard_split_1_frame_0960.png"}, {"color": "hsl(70, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_1_frame_1095.png", "label": "23", "shape": "dot", "title": "vineyard_split_1_frame_1095.png"}, {"color": "hsl(250, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_1_frame_0945.png", "label": "41", "shape": "dot", "title": "vineyard_split_1_frame_0945.png"}, {"color": "hsl(20, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_1_frame_0905.png", "label": "22", "shape": "dot", "title": "vineyard_split_1_frame_0905.png"}, {"color": "hsl(70, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_1_frame_1085.png", "label": "23", "shape": "dot", "title": "vineyard_split_1_frame_1085.png"}, {"color": "hsl(250, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_1_frame_0955.png", "label": "41", "shape": "dot", "title": "vineyard_split_1_frame_0955.png"}, {"color": "hsl(70, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_1_frame_1065.png", "label": "23", "shape": "dot", "title": "vineyard_split_1_frame_1065.png"}, {"color": "hsl(280, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_1_frame_0980.png", "label": "20", "shape": "dot", "title": "vineyard_split_1_frame_0980.png"}, {"color": "hsl(80, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_1_frame_1045.png", "label": "16", "shape": "dot", "title": "vineyard_split_1_frame_1045.png"}, {"color": "hsl(70, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_1_frame_1080.png", "label": "23", "shape": "dot", "title": "vineyard_split_1_frame_1080.png"}, {"color": "hsl(80, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_1_frame_1040.png", "label": "16", "shape": "dot", "title": "vineyard_split_1_frame_1040.png"}, {"color": "hsl(70, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_1_frame_1110.png", "label": "23", "shape": "dot", "title": "vineyard_split_1_frame_1110.png"}, {"color": "hsl(110, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_1_frame_1020.png", "label": "31", "shape": "dot", "title": "vineyard_split_1_frame_1020.png"}, {"color": "hsl(240, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_1_frame_1000.png", "label": "12", "shape": "dot", "title": "vineyard_split_1_frame_1000.png"}, {"color": "hsl(80, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_1_frame_1035.png", "label": "16", "shape": "dot", "title": "vineyard_split_1_frame_1035.png"}, {"color": "hsl(30, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_1_frame_0910.png", "label": "15", "shape": "dot", "title": "vineyard_split_1_frame_0910.png"}, {"color": "hsl(70, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_1_frame_1100.png", "label": "23", "shape": "dot", "title": "vineyard_split_1_frame_1100.png"}, {"color": "hsl(250, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_1_frame_0940.png", "label": "41", "shape": "dot", "title": "vineyard_split_1_frame_0940.png"}, {"color": "hsl(70, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_1_frame_1075.png", "label": "23", "shape": "dot", "title": "vineyard_split_1_frame_1075.png"}, {"color": "hsl(240, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_1_frame_1010.png", "label": "12", "shape": "dot", "title": "vineyard_split_1_frame_1010.png"}, {"color": "hsl(20, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_1_frame_0900.png", "label": "22", "shape": "dot", "title": "vineyard_split_1_frame_0900.png"}, {"color": "hsl(70, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_1_frame_1105.png", "label": "23", "shape": "dot", "title": "vineyard_split_1_frame_1105.png"}, {"color": "hsl(330, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_1_frame_0925.png", "label": "21", "shape": "dot", "title": "vineyard_split_1_frame_0925.png"}, {"color": "hsl(280, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_1_frame_0985.png", "label": "20", "shape": "dot", "title": "vineyard_split_1_frame_0985.png"}, {"color": "hsl(330, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_1_frame_0930.png", "label": "21", "shape": "dot", "title": "vineyard_split_1_frame_0930.png"}, {"color": "hsl(110, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_1_frame_1030.png", "label": "31", "shape": "dot", "title": "vineyard_split_1_frame_1030.png"}, {"color": "hsl(110, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_1_frame_1025.png", "label": "31", "shape": "dot", "title": "vineyard_split_1_frame_1025.png"}, {"color": "hsl(330, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_1_frame_0920.png", "label": "21", "shape": "dot", "title": "vineyard_split_1_frame_0920.png"}, {"color": "hsl(70, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_1_frame_1060.png", "label": "23", "shape": "dot", "title": "vineyard_split_1_frame_1060.png"}, {"color": "hsl(70, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_1_frame_1050.png", "label": "23", "shape": "dot", "title": "vineyard_split_1_frame_1050.png"}, {"color": "hsl(70, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_1_frame_1090.png", "label": "23", "shape": "dot", "title": "vineyard_split_1_frame_1090.png"}, {"color": "hsl(280, 70%, 50%)", "font": {"color": "white"}, "id": "vineyard_split_1_frame_0975.png", "label": "20", "shape": "dot", "title": "vineyard_split_1_frame_0975.png"}]);
+                  edges = new vis.DataSet([{"from": "vineyard_split_2_frame_1260.png", "to": "vineyard_split_2_frame_1255.png"}, {"from": "vineyard_split_2_frame_1260.png", "to": "vineyard_split_2_frame_1265.png"}, {"from": "vineyard_split_2_frame_1225.png", "to": "vineyard_split_2_frame_1220.png"}, {"from": "vineyard_split_2_frame_1245.png", "to": "vineyard_split_2_frame_1240.png"}, {"from": "vineyard_split_2_frame_1205.png", "to": "vineyard_split_2_frame_1210.png"}, {"from": "vineyard_split_2_frame_1240.png", "to": "vineyard_split_2_frame_1235.png"}, {"from": "vineyard_split_2_frame_1170.png", "to": "vineyard_split_2_frame_1175.png"}, {"from": "vineyard_split_2_frame_1170.png", "to": "vineyard_split_2_frame_1165.png"}, {"from": "vineyard_split_2_frame_1300.png", "to": "vineyard_split_2_frame_1295.png"}, {"from": "vineyard_split_2_frame_1300.png", "to": "vineyard_split_2_frame_1305.png"}, {"from": "vineyard_split_2_frame_1290.png", "to": "vineyard_split_2_frame_1295.png"}, {"from": "vineyard_split_2_frame_1310.png", "to": "vineyard_split_2_frame_1305.png"}, {"from": "vineyard_split_2_frame_1310.png", "to": "vineyard_split_2_frame_1315.png"}, {"from": "vineyard_split_2_frame_1200.png", "to": "vineyard_split_2_frame_1195.png"}, {"from": "vineyard_split_2_frame_1165.png", "to": "vineyard_split_2_frame_1160.png"}, {"from": "vineyard_split_2_frame_1275.png", "to": "vineyard_split_2_frame_1280.png"}, {"from": "vineyard_split_2_frame_1280.png", "to": "vineyard_split_2_frame_1285.png"}, {"from": "vineyard_split_2_frame_1155.png", "to": "vineyard_split_2_frame_1150.png"}, {"from": "vineyard_split_2_frame_1195.png", "to": "vineyard_split_2_frame_1190.png"}, {"from": "vineyard_split_2_frame_1190.png", "to": "vineyard_split_2_frame_1185.png"}, {"from": "vineyard_split_2_frame_1270.png", "to": "vineyard_split_2_frame_1265.png"}, {"from": "vineyard_split_2_frame_1210.png", "to": "vineyard_split_2_frame_1215.png"}, {"from": "vineyard_split_2_frame_1235.png", "to": "vineyard_split_2_frame_1230.png"}, {"from": "vineyard_split_3_frame_1395.png", "to": "vineyard_split_3_frame_1400.png"}, {"from": "vineyard_split_3_frame_1475.png", "to": "vineyard_split_3_frame_1470.png"}, {"from": "vineyard_split_3_frame_1475.png", "to": "vineyard_split_3_frame_1480.png"}, {"from": "vineyard_split_3_frame_0255.png", "to": "vineyard_split_3_frame_0250.png"}, {"from": "vineyard_split_3_frame_0255.png", "to": "vineyard_split_3_frame_0260.png"}, {"from": "vineyard_split_3_frame_1425.png", "to": "vineyard_split_3_frame_1430.png"}, {"from": "vineyard_split_3_frame_0125.png", "to": "vineyard_split_3_frame_0120.png"}, {"from": "vineyard_split_3_frame_0125.png", "to": "vineyard_split_3_frame_0130.png"}, {"from": "vineyard_split_3_frame_1480.png", "to": "vineyard_split_3_frame_1485.png"}, {"from": "vineyard_split_3_frame_0215.png", "to": "vineyard_split_3_frame_0210.png"}, {"from": "vineyard_split_3_frame_0215.png", "to": "vineyard_split_3_frame_0220.png"}, {"from": "vineyard_split_3_frame_0295.png", "to": "vineyard_split_3_frame_0290.png"}, {"from": "vineyard_split_3_frame_0295.png", "to": "vineyard_split_3_frame_0300.png"}, {"from": "vineyard_split_3_frame_0090.png", "to": "vineyard_split_3_frame_0095.png"}, {"from": "vineyard_split_3_frame_0090.png", "to": "vineyard_split_3_frame_0085.png"}, {"from": "vineyard_split_3_frame_0190.png", "to": "vineyard_split_3_frame_0185.png"}, {"from": "vineyard_split_3_frame_0190.png", "to": "vineyard_split_3_frame_0195.png"}, {"from": "vineyard_split_3_frame_0265.png", "to": "vineyard_split_3_frame_0260.png"}, {"from": "vineyard_split_3_frame_0265.png", "to": "vineyard_split_3_frame_0270.png"}, {"from": "vineyard_split_3_frame_1445.png", "to": "vineyard_split_3_frame_1440.png"}, {"from": "vineyard_split_3_frame_0290.png", "to": "vineyard_split_3_frame_0285.png"}, {"from": "vineyard_split_3_frame_1450.png", "to": "vineyard_split_3_frame_1455.png"}, {"from": "vineyard_split_3_frame_1555.png", "to": "vineyard_split_3_frame_1550.png"}, {"from": "vineyard_split_3_frame_0145.png", "to": "vineyard_split_3_frame_0150.png"}, {"from": "vineyard_split_3_frame_0145.png", "to": "vineyard_split_3_frame_0140.png"}, {"from": "vineyard_split_3_frame_1405.png", "to": "vineyard_split_3_frame_1400.png"}, {"from": "vineyard_split_3_frame_1500.png", "to": "vineyard_split_3_frame_1495.png"}, {"from": "vineyard_split_3_frame_1500.png", "to": "vineyard_split_3_frame_1505.png"}, {"from": "vineyard_split_3_frame_0075.png", "to": "vineyard_split_3_frame_0080.png"}, {"from": "vineyard_split_3_frame_0160.png", "to": "vineyard_split_3_frame_0165.png"}, {"from": "vineyard_split_3_frame_0160.png", "to": "vineyard_split_3_frame_0155.png"}, {"from": "vineyard_split_3_frame_0150.png", "to": "vineyard_split_3_frame_0155.png"}, {"from": "vineyard_split_3_frame_0140.png", "to": "vineyard_split_3_frame_0135.png"}, {"from": "vineyard_split_3_frame_0270.png", "to": "vineyard_split_3_frame_0275.png"}, {"from": "vineyard_split_3_frame_0170.png", "to": "vineyard_split_3_frame_0165.png"}, {"from": "vineyard_split_3_frame_0170.png", "to": "vineyard_split_3_frame_0175.png"}, {"from": "vineyard_split_3_frame_0285.png", "to": "vineyard_split_3_frame_0280.png"}, {"from": "vineyard_split_3_frame_1490.png", "to": "vineyard_split_3_frame_1495.png"}, {"from": "vineyard_split_3_frame_0280.png", "to": "vineyard_split_3_frame_0275.png"}, {"from": "vineyard_split_3_frame_0225.png", "to": "vineyard_split_3_frame_0230.png"}, {"from": "vineyard_split_3_frame_0225.png", "to": "vineyard_split_3_frame_0220.png"}, {"from": "vineyard_split_3_frame_0080.png", "to": "vineyard_split_3_frame_0085.png"}, {"from": "vineyard_split_3_frame_0250.png", "to": "vineyard_split_3_frame_0245.png"}, {"from": "vineyard_split_3_frame_0120.png", "to": "vineyard_split_3_frame_0115.png"}, {"from": "vineyard_split_3_frame_1510.png", "to": "vineyard_split_3_frame_1515.png"}, {"from": "vineyard_split_3_frame_1510.png", "to": "vineyard_split_3_frame_1505.png"}, {"from": "vineyard_split_3_frame_0105.png", "to": "vineyard_split_3_frame_0100.png"}, {"from": "vineyard_split_3_frame_0105.png", "to": "vineyard_split_3_frame_0110.png"}, {"from": "vineyard_split_3_frame_1535.png", "to": "vineyard_split_3_frame_1540.png"}, {"from": "vineyard_split_3_frame_1540.png", "to": "vineyard_split_3_frame_1545.png"}, {"from": "vineyard_split_3_frame_0205.png", "to": "vineyard_split_3_frame_0200.png"}, {"from": "vineyard_split_3_frame_0205.png", "to": "vineyard_split_3_frame_0210.png"}, {"from": "vineyard_split_3_frame_1410.png", "to": "vineyard_split_3_frame_1415.png"}, {"from": "vineyard_split_3_frame_0305.png", "to": "vineyard_split_3_frame_0300.png"}, {"from": "vineyard_split_3_frame_0235.png", "to": "vineyard_split_3_frame_0230.png"}, {"from": "vineyard_split_3_frame_0235.png", "to": "vineyard_split_3_frame_0240.png"}, {"from": "vineyard_split_3_frame_0175.png", "to": "vineyard_split_3_frame_0180.png"}, {"from": "vineyard_split_3_frame_1465.png", "to": "vineyard_split_3_frame_1460.png"}, {"from": "vineyard_split_3_frame_1525.png", "to": "vineyard_split_3_frame_1530.png"}, {"from": "vineyard_split_3_frame_0110.png", "to": "vineyard_split_3_frame_0115.png"}, {"from": "vineyard_split_3_frame_0195.png", "to": "vineyard_split_3_frame_0200.png"}, {"from": "vineyard_split_3_frame_1570.png", "to": "vineyard_split_3_frame_1565.png"}, {"from": "vineyard_split_3_frame_0100.png", "to": "vineyard_split_3_frame_0095.png"}, {"from": "vineyard_split_3_frame_1560.png", "to": "vineyard_split_3_frame_1565.png"}, {"from": "vineyard_split_3_frame_1430.png", "to": "vineyard_split_3_frame_1435.png"}, {"from": "vineyard_split_3_frame_0245.png", "to": "vineyard_split_3_frame_0240.png"}, {"from": "vineyard_split_3_frame_0130.png", "to": "vineyard_split_3_frame_0135.png"}, {"from": "vineyard_split_3_frame_0185.png", "to": "vineyard_split_3_frame_0180.png"}, {"from": "vineyard_split_3_frame_1415.png", "to": "vineyard_split_3_frame_1420.png"}, {"from": "vineyard_split_1_frame_0950.png", "to": "vineyard_split_1_frame_0955.png"}, {"from": "vineyard_split_1_frame_0950.png", "to": "vineyard_split_1_frame_0945.png"}, {"from": "vineyard_split_1_frame_1005.png", "to": "vineyard_split_1_frame_1010.png"}, {"from": "vineyard_split_1_frame_1005.png", "to": "vineyard_split_1_frame_1000.png"}, {"from": "vineyard_split_1_frame_0915.png", "to": "vineyard_split_1_frame_0920.png"}, {"from": "vineyard_split_1_frame_0915.png", "to": "vineyard_split_1_frame_0910.png"}, {"from": "vineyard_split_1_frame_0995.png", "to": "vineyard_split_1_frame_1000.png"}, {"from": "vineyard_split_1_frame_1070.png", "to": "vineyard_split_1_frame_1075.png"}, {"from": "vineyard_split_1_frame_1070.png", "to": "vineyard_split_1_frame_1065.png"}, {"from": "vineyard_split_1_frame_1015.png", "to": "vineyard_split_1_frame_1020.png"}, {"from": "vineyard_split_1_frame_0990.png", "to": "vineyard_split_1_frame_0985.png"}, {"from": "vineyard_split_1_frame_1055.png", "to": "vineyard_split_1_frame_1060.png"}, {"from": "vineyard_split_1_frame_1055.png", "to": "vineyard_split_1_frame_1050.png"}, {"from": "vineyard_split_1_frame_0965.png", "to": "vineyard_split_1_frame_0970.png"}, {"from": "vineyard_split_1_frame_0965.png", "to": "vineyard_split_1_frame_0960.png"}, {"from": "vineyard_split_1_frame_0935.png", "to": "vineyard_split_1_frame_0930.png"}, {"from": "vineyard_split_1_frame_0935.png", "to": "vineyard_split_1_frame_0940.png"}, {"from": "vineyard_split_1_frame_0970.png", "to": "vineyard_split_1_frame_0975.png"}, {"from": "vineyard_split_1_frame_0960.png", "to": "vineyard_split_1_frame_0955.png"}, {"from": "vineyard_split_1_frame_1095.png", "to": "vineyard_split_1_frame_1090.png"}, {"from": "vineyard_split_1_frame_1095.png", "to": "vineyard_split_1_frame_1100.png"}, {"from": "vineyard_split_1_frame_0945.png", "to": "vineyard_split_1_frame_0940.png"}, {"from": "vineyard_split_1_frame_0905.png", "to": "vineyard_split_1_frame_0900.png"}, {"from": "vineyard_split_1_frame_1085.png", "to": "vineyard_split_1_frame_1090.png"}, {"from": "vineyard_split_1_frame_1085.png", "to": "vineyard_split_1_frame_1080.png"}, {"from": "vineyard_split_1_frame_1065.png", "to": "vineyard_split_1_frame_1060.png"}, {"from": "vineyard_split_1_frame_0980.png", "to": "vineyard_split_1_frame_0985.png"}, {"from": "vineyard_split_1_frame_0980.png", "to": "vineyard_split_1_frame_0975.png"}, {"from": "vineyard_split_1_frame_1045.png", "to": "vineyard_split_1_frame_1040.png"}, {"from": "vineyard_split_1_frame_1045.png", "to": "vineyard_split_1_frame_1050.png"}, {"from": "vineyard_split_1_frame_1080.png", "to": "vineyard_split_1_frame_1075.png"}, {"from": "vineyard_split_1_frame_1040.png", "to": "vineyard_split_1_frame_1035.png"}, {"from": "vineyard_split_1_frame_1110.png", "to": "vineyard_split_1_frame_1105.png"}, {"from": "vineyard_split_1_frame_1020.png", "to": "vineyard_split_1_frame_1025.png"}, {"from": "vineyard_split_1_frame_1100.png", "to": "vineyard_split_1_frame_1105.png"}, {"from": "vineyard_split_1_frame_0925.png", "to": "vineyard_split_1_frame_0930.png"}, {"from": "vineyard_split_1_frame_0925.png", "to": "vineyard_split_1_frame_0920.png"}, {"from": "vineyard_split_1_frame_1030.png", "to": "vineyard_split_1_frame_1025.png"}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+                      network.on("stabilizationProgress", function(params) {
+                          document.getElementById('loadingBar').removeAttribute("style");
+                          var maxWidth = 496;
+                          var minWidth = 20;
+                          var widthFactor = params.iterations/params.total;
+                          var width = Math.max(minWidth,maxWidth * widthFactor);
+                          document.getElementById('bar').style.width = width + 'px';
+                          document.getElementById('text').innerHTML = Math.round(widthFactor*100) + '%';
+                      });
+                      network.once("stabilizationIterationsDone", function() {
+                          document.getElementById('text').innerHTML = '100%';
+                          document.getElementById('bar').style.width = '496px';
+                          document.getElementById('loadingBar').style.opacity = 0;
+                          // really clean the dom element
+                          setTimeout(function () {document.getElementById('loadingBar').style.display = 'none';}, 500);
+                      });
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

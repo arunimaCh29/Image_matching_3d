@@ -10,6 +10,16 @@ import os
 import numpy as np
 
 def get_SIFT_features(image, device, cuda, max_keypoints):
+    '''
+    Args:
+        image (torch.Tensor): tensor of image
+        device (str): device to move tensors to
+        cuda (bool): True, if GPU is used
+        max_keypoints (int): maximum keypoints for descriptor
+
+    Returns:
+        Dict: Dictionary containing descriptor output
+    '''
     if device:
         extractor = SIFT(max_num_keypoints=max_keypoints).eval().to(device)  # load the extractor
         # image = load_image(image_location).cuda()
@@ -22,6 +32,16 @@ def get_SIFT_features(image, device, cuda, max_keypoints):
     return feats
 
 def get_DISK_features(image, device, cuda, max_keypoints):
+    '''
+    Args:
+        image (torch.Tensor): tensor of image
+        device (str): device to move tensors to
+        cuda (bool): True, if GPU is used
+        max_keypoints (int): maximum keypoints for descriptor
+
+    Returns:
+        Dict: Dictionary containing descriptor output
+    '''
     if device:
         extractor = DISK(max_num_keypoints=max_keypoints).eval().to(device)  # load the extractor
         #image = load_image(image_location).cuda()
@@ -34,6 +54,18 @@ def get_DISK_features(image, device, cuda, max_keypoints):
     return feats
 
 def save_result(save_dir, extractor, i, dataset_name, scene_name, image_name, image_path, image, res):
+    '''
+    Args:
+        save_dir (str): path to save descriptor output
+        extractor (str): descriptor tye (sift / disk)
+        i (int): batch index
+        dataset_name (str): dataset name of an image
+        scene_name (str): scene name of an image
+        image_name (str): image name
+        image_path (str): path to the image
+        image (torch.Tensor): tensor of image
+        res (dict): dictionary of descriptor output
+    '''
     os.makedirs(save_dir, exist_ok=True)
     out_path = os.path.join(save_dir, f"{i}_1024_{extractor}.h5")
     dt = h5py.string_dtype(encoding="utf-8")
@@ -50,6 +82,16 @@ def save_result(save_dir, extractor, i, dataset_name, scene_name, image_name, im
         f.create_dataset('image_path', data=image_path, dtype=dt)
 
 def batch_feature_descriptor(loader, device, descriptor_type, output_dir, max_keypoints=2048, cuda=True):
+    '''
+    Run descriptor in batch
+    Args:
+        loader (DataLoader): dataloader containing images
+        device (str): device to move tensors to
+        descriptor_type (str): descriptor type (sift / disk)
+        output_dir (str): path to save the descriptor output
+        max_keypoints (int): maximum keypoints for descriptor
+        cuda (bool): True, if GPU is used
+    '''
     for i, batch in enumerate(loader):
         torch.cuda.empty_cache()
         

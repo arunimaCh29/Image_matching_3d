@@ -3,17 +3,31 @@ import numpy as np
 import torch
 import os
 import sys
-sys.path.append(os.path.abspath("./"))
-from load_h5py_files import load_sift_output
-sys.path.append(os.path.abspath("./feature_matching"))
-from flann_matcher import convert_result_into_opencv
+# sys.path.append(os.path.abspath("./"))
+# from load_h5py_files import load_sift_output
+# sys.path.append(os.path.abspath("./feature_matching"))
+# from flann_matcher import convert_result_into_opencv
                 
 
-def get_disk_output(output, image_name):
-  return next(filter(lambda x: x["image_name"] == image_name, output), None)
+# def get_disk_output(output, image_name):
+#   return next(filter(lambda x: x["image_name"] == image_name, output), None)
 
 # copy from branch evaluation_feature
 def run_ransac(points0, points1, min_point=8, reproj_thres=1.5, confidence=0.99):
+    '''
+    Run ransac to remove noisy keypoints
+    Args:
+        points0 (torch.Tensor): matched keypoints from first image
+        points1 (torch.Tensor): matched keypoints from second image
+        min_point (int): minimum length of matched keypoints
+        reproj_thres (float): parameter for openCV ransac
+        confidence (float): parameter for openCV ransac
+
+    Returns:
+        numpy.ndarray: filtered matched points0 after ransac, None if matched keypoints smaller than minimum point or no result from ransac
+        numpy.ndarray: filtered matched points1 after ransac, None if matched keypoints smaller than minimum point or no result from ransac
+        numpy.ndarray: ransac mask, None if matched keypoints smaller than minimum point or no result from ransac
+    '''
 
     pts0 = points0.cpu().numpy()
     pts1 = points1.cpu().numpy()

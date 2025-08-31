@@ -7,6 +7,16 @@ from pyvis.network import Network
 import ast
 
 def build_graph(matches_df, labels_df, matcher):
+    '''
+    Create graph for clustering
+    Args:
+        matches_df (DataFrame): dataframe containing matching data
+        labels_df (DataFrame): dataframe of train labels CSV
+        matcher (str): matcher type (flann / lightglue)
+
+    Returns:
+        Dict: Dictionary containing dataset and its graph
+    '''
     dataset_name = matches_df["dataset"].unique()
     
     graphs = {}
@@ -76,12 +86,20 @@ def build_graph(matches_df, labels_df, matcher):
 #     return G
 
 def graph_clustering(graphs, threshold=None):
+    '''
+    Create clustering for a graph
+    Args:
+        graphs (dict): dictionary containing dataset name and its graph
+        threshold (optional): optional threshold to grpup the generated cluster as one of the cluster or outlier
+
+    Returns:
+        Dict: Dictionary containing dataset and its clustering data
+    '''
     clustering = {}
     for graph in graphs:
         gr = graphs[graph]
         communities = community_louvain.best_partition(gr) # output: dict with image name as the key and the community index as the value, e.g.: {imageA : 0, imageB : 0, imageC : 1}
-        # invert the communities output so that it is a dict with the community index as the key and list of image name as the value, e.g. {0 : [imageA, imageB], 1 : [imageC]}
-        inverted_communities = defaultdict(list)
+        inverted_communities = defaultdict(list) # invert the communities output so that it is a dict with the community index as the key and list of image name as the value, e.g. {0 : [imageA, imageB], 1 : [imageC]}
         for k, v in communities.items():
             inverted_communities[v].append(k)
         
@@ -148,6 +166,13 @@ def graph_clustering(graphs, threshold=None):
 #     return clusters, outliers
 
 def interactive_graph(graphs, clustering, output_dir):
+    '''
+    Create visualization for a clustering graph
+    Args:
+        graphs (dict): dictionary containing dataset and its graph
+        clustering (dict): dictionary containing dataset and its clustering result
+        output_dir (str): path to save the visualization
+    '''
     for data in clustering:
         graph = graphs[data]
         cluster = clustering[data]

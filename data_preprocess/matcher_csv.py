@@ -8,6 +8,13 @@ from load_h5py_files import load_matches_from_h5
 
 class MatcherCsv():
     def __init__(self, matcher_type, descriptor_type, matcher_dir, csv_output_dir):
+        '''
+        Args:
+            matcher_type (str): type of matcher (flann / lightglue)
+            descriptor_type (str): type of descriptor (sift / disk)
+            matcher_dir (str): path to matcher result
+            csv_output_dir (str): path to save the merged image matching result as CSV
+        '''
         self.matcher_type = matcher_type
         self.descriptor_type = descriptor_type
         self.matcher_dir = matcher_dir
@@ -15,6 +22,9 @@ class MatcherCsv():
         self.matcher_data = self.create_matcher_csv()
 
     def create_matcher_csv(self):
+        '''
+        Merge image matching result in one CSV
+        '''
         all_data = []
 
         for file in os.listdir(self.matcher_dir):
@@ -22,6 +32,7 @@ class MatcherCsv():
                 continue
 
             filepath = os.path.join(self.matcher_dir, file)
+            # load image matching result from .h5 file
             file_data = load_matches_from_h5(filepath)
 
             # convert tensor data into list
@@ -42,6 +53,7 @@ class MatcherCsv():
                     data["matches_idx"] = data["matches_idx"].cpu().detach().numpy().tolist()
                     data["distances"] = data["distances"].cpu().detach().numpy().tolist()
 
+            # merge data
             all_data += file_data
 
         df_all_data = pd.DataFrame(all_data)

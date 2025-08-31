@@ -4,12 +4,20 @@ from itertools import combinations
 
 class ImagePairCsv():
     def __init__(self, labels_path, output_dir):
+        '''
+        Args:
+            labels_path (str): path to train labels CSV
+            output_dir (str): path to save the image pairing data
+        '''
         self.labels_df = pd.read_csv(labels_path)
         self.output_dir = output_dir
 
         self.pairs_csv = self.create_csv()
     
     def create_csv(self):
+        '''
+        Create image pairing between images of same dataset, save as CSV
+        '''
         dataset = self.labels_df["dataset"].unique()
         first_images, second_images, datasets = [], [], []
 

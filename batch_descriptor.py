@@ -37,6 +37,7 @@ def save_result(save_dir, extractor, i, image, dataset_name, scene_name, image_n
     os.makedirs(save_dir, exist_ok=True)
     out_path = os.path.join(save_dir, f"{i}_1024_{extractor}.h5")
     dt = h5py.string_dtype(encoding="utf-8")
+
     with h5py.File(out_path, 'w') as f:
         f.create_dataset('keypoints', data=res['keypoints'].cpu().detach().numpy())
         f.create_dataset('keypoint_scores', data=res['keypoint_scores'].cpu().detach().numpy())
@@ -44,6 +45,9 @@ def save_result(save_dir, extractor, i, image, dataset_name, scene_name, image_n
         f.create_dataset('image', data=image.cpu().detach().numpy())
         if extractor.lower() == "disk":
             f.create_dataset('keypoints_mask', data=res['keypoints_mask'].cpu().detach().numpy())
+        if extractor.lower() == 'sift':
+            f.create_dataset('scales', data=res['scales'].cpu().detach().numpy())
+            f.create_dataset('oris', data=res['oris'].cpu().detach().numpy())
         f.create_dataset('image_name', data=image_name, dtype=dt)
         f.create_dataset('dataset_name', data=dataset_name, dtype=dt)
         f.create_dataset('scene_name', data=scene_name, dtype=dt)
@@ -56,8 +60,7 @@ def batch_feature_descriptor(loader, device, descriptor_type, output_dir, max_ke
         if descriptor_type.lower() == "sift":
             features = get_SIFT_features(batch["image"].to(device), device, cuda, max_keypoints)
         elif descriptor_type.lower() == "disk":
-            features = get_DISK_features(batch["image"].to(device), device, cuda, max_keypoints)
-            
+            features = get_DISK_features(batch["image"].to(device), device, cuda, max_keypoints)   
         save_result(output_dir, descriptor_type, i, batch["image"], batch['dataset_name'], batch['scene_name'], batch['image_name'], batch['image_path'], features)
 
         del features

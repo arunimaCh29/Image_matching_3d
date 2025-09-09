@@ -5,6 +5,7 @@ import os
 import community as community_louvain
 from pyvis.network import Network
 import ast
+import json
 
 def build_graph(matches_df, labels_df, matcher):
     '''
@@ -193,5 +194,48 @@ def interactive_graph(graphs, clustering, output_dir):
 
         os.makedirs(output_dir, exist_ok=True)
         out_path = os.path.join(output_dir, f"visualization_cluster_{data}.html")
-        
+
+        net.show_buttons(filter_=['physics']) # Add buttons to control the physics parameter in the visualization
         net.show(out_path)
+
+def load_json_graph(graph_dir):
+    '''
+    Load saved graph's JSON and convert it into networkx Graph
+
+    Args:
+        graph_dir (str): path to saved graph JSON folder
+
+    Returns:
+        Dict: dictionary containing dataset name and its graph
+    '''
+
+    graphs = {}
+
+    for file in os.listdir(graph_dir):
+        if not file.endswith(".json"):
+            continue
+    
+        with open(os.path.join(graph_dir, file), "r") as f:
+            graph_json = json.load(f)
+        
+        dataset_graph = nx.node_link_graph(graph_json, edges="edges")
+        dataset_name = file[len('graph_'):-len('.json')]
+        graphs[dataset_name] = dataset_graph
+    
+    return graphs
+
+def load_json_clustering(clustering_filepath):
+    '''
+    Load saved clustering JSON file
+
+    Args:
+        clustering_filepath (str): file path to saved clustering JSON file
+
+    Returns:
+        Dict : dictionary containing dataset and its clustering result
+    '''
+
+    with open(clustering_filepath, "r") as f:
+        clusters = json.load(f)
+
+    return clusters

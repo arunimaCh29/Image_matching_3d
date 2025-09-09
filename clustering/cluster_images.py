@@ -32,15 +32,18 @@ def build_graph(matches_df, labels_df, matcher):
         for idx, row in matches_df[matches_df["dataset"] == dataset].iterrows():
             image1 = row["image1"]
             image2 = row["image2"]
-            if matcher == "flann":
-                matches = np.array(ast.literal_eval(row["matches_idx"]))
-            elif matcher == "lightglue":
-                matches = np.array(ast.literal_eval(row["matches"]))
-                                   
             if row["filtered_points0"] is None and row["filtered_points1"] is None and row["ransac_mask"] is None:
                 continue
+            if matcher == "flann":
+                matches = np.array(ast.literal_eval(row["matches_idx"]))
+                count_filtered_match = len(matches[row["ransac_mask"]])
+            elif matcher == "lightglue":
+                matches = np.array(ast.literal_eval(row["filtered_points0"]))
+                count_filtered_match = len(matches[:])
+                                   
+
             
-            count_filtered_match = len(matches[row["ransac_mask"]])
+            #count_filtered_match = len(matches[row["ransac_mask"]])
             G.add_edge(image1, image2, weight=count_filtered_match)
 
     return graphs

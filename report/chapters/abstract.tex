@@ -1,0 +1,8 @@
+%!TEX root = ../report.tex
+\documentclass[report.tex]{subfiles}
+\begin{document}
+    \begin{abstract}
+Reconstructing 3D scenes from unstructured image collections is a critical task in computer vision, but it is often hindered by noisy data from varied viewpoints and lighting conditions. This project presents a comparative analysis of traditional and deep learning-based approaches for image matching within the Structure-from-Motion (SfM) pipeline, with the goal of grouping images into coherent scenes. We implement and evaluate four distinct pipelines, combining two feature descriptors (SIFT and DISK) with two matchers (FLANN and LightGlue). Using the Kaggle Image Matching Challenge 2025 dataset, our methodology involves feature extraction, pairwise matching, constructing a similarity graph, and applying the Louvain community detection algorithm to form image clusters. Performance is assessed against ground-truth labels using scene-level metrics (Precision, Recall, F1-score) and clustering quality indices (Homogeneity, Completeness, V-Measure). The results demonstrate the clear superiority of learning-based methods, with the combination of the DISK descriptor and the transformer-based LightGlue matcher achieving the highest overall F1-score of 0.664 and recall of 0.598. This indicates its superior ability to form complete and accurate scene clusters, providing a robust solution for preparing image sets for downstream 3D reconstruction tasks.
+
+\end{abstract}
+\end{document}

@@ -1,0 +1,56 @@
+%!TEX root = ../report.tex
+ \documentclass[report.tex]{subfiles}
+\begin{document}
+%     \chapter{State of the Art}
+
+% Effective feature extraction and matching are foundational for tasks like image clustering and 3D scene reconstruction. This section categorizes and reviews relevant methods under traditional and deep learning-based approaches, including recent advances using transformers.
+
+\chapter{State of the Art}
+
+Effective feature extraction and matching are foundational for tasks like 3D scene reconstruction. This section categorizes and reviews relevant methods under traditional and deep learning-based approaches, including recent advances using transformers.
+
+ \section{Traditional-Based Approaches}
+\subsection{Local Features}
+
+% \subsubsubsection{Sparse Correspondence}
+Traditional sparse matching techniques aim to find reliable interest points between images. The Scale-Invariant Feature Transform (SIFT)~\cite{lowe2004sift} is a method that detects keypoints and generates descriptors invariant to scale, rotation, and some affine distortions. Likewise, ORB~\cite{rublee2011orb} combines FAST keypoint detector with BRIEF descriptors for efficiency, though at some cost to matching accuracy.
+
+% \subsubsubsection{Dense Correspondence}
+Dense correspondence methods, such as DAISY~\cite{4815264} and Dense SIFT~\cite{vedaldi2008vlfeat}, compute descriptors over a regular grid or the entire image. These methods can be computationally expensive but are better suited for textureless or repetitive patterns where sparse keypoints fail.
+
+\subsection{Global Features}
+Global descriptors represent an entire image, often used for image retrieval or rough clustering before local refinement. Traditional global descriptors include GIST~\cite{oliva2001gist} and Histogram of Oriented Gradients (HOG)~\cite{dalal2005hog}. While HOG does not provide keypoints, it captures gradient orientation statistics over local patches and is useful for global image representation or region-level matching.
+
+% \section{Learning-Based Approaches}
+
+% % \subsubsubsection{CNN-Based Descriptors}
+% Deep learning has enabled learning of feature descriptors directly from data. DELF(DEep Local Feature) \cite{Noh_2017_ICCV}, is a CNN-based local feature with attention for image retreival task. Other CNN-based models include NetVLAD \cite{arandjelovic2016netvlad}, Generalized-Mean(GeM) \cite{8382272}.
+
+% % \subsubsubsection{Transformer-Based Matching – SuperGlue}
+% Recently, SuperGlue~\cite{sarlin2020superglue} has emerged as a state-of-the-art method that combines graph neural networks and self-attention to perform context-aware matching of sparse keypoints. Unlike earlier methods, SuperGlue models the spatial and semantic relationships between keypoints, improving performance especially in low-texture or repetitive environments.
+
+% Its follow-up, LightGlue~\cite{lindenberger2023lightgluelocalfeaturematching} improves upon SuperGlue's architecture by optimizing the network size. This makes LightGlue state-of-the-art, offering greater accuracy and faster training than SuperGlue.
+
+
+\section{Learning-Based Approaches}
+
+\subsection{CNN-Based Descriptors}
+Deep learning has enabled the learning of feature descriptors directly from data. DELF (DEep Local Feature) \cite{Noh_2017_ICCV} is a CNN-based local feature extractor that employs an attention mechanism to identify salient regions for tasks such as image retrieval. Other CNN-based global descriptors, such as NetVLAD \cite{arandjelovic2016netvlad} and GeM (Generalized-Mean) pooling \cite{8382272}, have demonstrated strong performance in place recognition and large-scale retrieval. However, these models often require large annotated datasets for training and are computationally expensive to deploy, particularly on edge devices.
+
+\subsection{Transformer-Based Matching}
+Recently, transformer-based models have emerged as state-of-the-art in feature matching. SuperGlue \cite{sarlin2020superglue} combines graph neural networks and self-attention to model relationships between keypoints across images, enabling context-aware matching. Its successor, LightGlue \cite{lindenberger2023lightgluelocalfeaturematching}, streamlines the architecture to improve computational efficiency while retaining robustness. LightGlue leverages adaptive attention mechanisms, allowing it to process fewer keypoints without sacrificing matching quality. Nevertheless, transformer-based methods typically demand significant GPU resources, and their inference time can still be prohibitive in real-time robotics applications.
+
+\subsection{Learning-Based Local Descriptors}
+DISK (Deep Image Structure Keypoints)~\cite{tyszkiewicz2020disk} represents a more recent direction in deep local descriptors. Unlike handcrafted methods such as SIFT, DISK learns both the keypoint detector and descriptor jointly in an end-to-end manner. This allows it to adaptively select informative points in diverse conditions, leading to more robust correspondences under severe changes in viewpoint, illumination, or texture. However, DISK’s performance depends heavily on the quality and diversity of its training data. Moreover, the computational cost of inference remains higher than traditional methods like SIFT, making real-time deployment challenging without dedicated accelerators.
+
+\section{Limitations of the State of the Art}
+
+Despite the significant progress in feature extraction and matching, several limitations persist:
+\begin{itemize}
+    \item \textbf{Handcrafted methods vs. robustness:} While SIFT is highly stable across moderate changes in viewpoint and scale, it remains computationally heavy and prone to failure in textureless or repetitive environments.
+    \item \textbf{Approximate matching trade-offs:} FLANN accelerates the matching process but introduces approximation errors that may reduce precision, particularly in tasks requiring high-quality correspondences for 3D reconstruction.
+    \item \textbf{Resource demands of deep methods:} Deep descriptors like DISK and attention-based matchers like LightGlue achieve state-of-the-art accuracy, but they are computationally expensive, requiring GPUs or optimized inference engines, which limits their applicability on mobile or embedded systems.
+\end{itemize}
+
+These limitations highlight the importance of exploring hybrid pipelines that combine the efficiency of traditional methods with the robustness of deep learning approaches, tailored to the computational and performance constraints of the target application.
+\end{document}

@@ -1,0 +1,45 @@
+%!TEX root = ../report.tex
+\documentclass[report.tex]{subfiles}
+\begin{document}
+    \chapter{Introduction}
+
+Reconstructing a 3D scene from a collection of photographs is a fundamental challenge in computer vision, with widespread applications in robotics, autonomous systems, cultural heritage preservation, and augmented reality. However, real-world image collections are inherently noisy, often comprising images taken from diverse viewpoints, under varying lighting conditions, and with differing intent. In such scenarios, distinguishing between images that contribute meaningfully to a coherent 3D structure and those that do not becomes a non-trivial task.
+
+This project draws inspiration from the Kaggle Image Matching Challenge \cite{image-matching-challenge-2025}, which emphasizes the importance of accurate image correspondence in unconstrained environments. Our focus lies specifically on the feature description and feature matching components of the Structure-from-Motion (SfM) pipeline, two critical steps that significantly influence the quality of downstream 3D reconstruction.
+
+The primary objective of this project is to compare and analyze both traditional and deep learning-based methods for feature descriptor and matching. In particular, we intend to group relevant images of a class or scene that could be used for 3D reconstruction. 
+
+% evaluate:
+
+%     ORB (Oriented FAST and Rotated BRIEF) as a traditional, lightweight, and computationally efficient feature descriptor.
+
+%     DINO (Self-Distillation with No Labels), a transformer-based vision model known for its strong global representations, as our deep learning-based feature extractor.
+
+%     Brute-Force and FLANN (Fast Library for Approximate Nearest Neighbors) matchers, augmented with RANSAC for geometric filtering, as traditional matching baselines.
+
+%     LightGlue, a contemporary deep learning-based matcher that leverages attention mechanisms to generate robust, context-aware correspondences.
+
+
+
+\section{Relevance of This Project}
+\begin{itemize}
+    \item Urban planners and architects, who utilize 3D reconstructions for modeling and simulation.
+    \item AR/VR developers and simulation engineers, who require accurate spatial models for immersive environments.
+    \item Insights into the computational efficiency vs. performance trade-off, enabling the design of hybrid pipelines for resource-constrained environments such as edge devices or mobile platforms.
+ \end{itemize}
+
+
+\section{Challenges and Difficulties}
+
+One of the primary challenges in this project arises from the inherently noisy and unstructured nature of real-world image datasets. Images may be captured from diverse viewpoints, under inconsistent lighting, or with varying levels of occlusion. Such variability makes it difficult for traditional descriptors like SIFT\cite{lowe2004sift} and deep learning-based methods such as DISK\cite{tyszkiewicz2020disk} to consistently identify repeatable keypoints across the collection.
+
+Another difficulty lies in the sensitivity of feature descriptors and matchers to environmental conditions. While SIFT has strong invariance properties, its performance can still degrade in the presence of large viewpoint changes or significant illumination differences. Similarly, although DISK leverages deep learning to produce robust local features, its performance may be affected by images with limited texture or significant motion blur.
+
+A further challenge concerns the balance between computational efficiency and matching robustness. FLANN \cite{muja2009fast} provides a scalable and efficient approach for approximate nearest-neighbor search, yet it may sacrifice some accuracy in exchange for speed. Conversely, LightGlue \cite{lindenberger2023lightgluelocalfeaturematching}, which employs attention mechanisms to establish context-aware correspondences, often achieves higher accuracy but at the cost of greater computational overhead. Selecting an appropriate trade-off between speed and accuracy is non-trivial, particularly in scenarios where resources are constrained.
+
+Finally, ensuring reliable clustering of images into coherent scene groups remains a significant obstacle. Even with accurate feature descriptors and matchers, small errors in correspondence can propagate through geometric verification and clustering stages, resulting in incorrect groupings. Such misclassifications directly compromise the quality of image sets available for downstream 3D reconstruction tasks.
+
+
+    \section{Problem Statement}
+ Given the unstructured dataset, the objective of this project is to implement both deep learning and traditional method for feature description and feature matching to group the images so that they can be used for another purpose, in particular for 3D scene reconstruction. The proposed pipeline will provide cluster labels to the images in the dataset as the output, signifying that those images will be part of a cluster that can be used for 3D scene reconstruction. The results will be evaluated using the F1-score metric, which will be calculated by comparing ground truth scene labels of the image with the predicted scene cluster assignments. A high F1-score would indicate that the images within the predicted cluster have the same scene label as in the ground truth.
+\end{document}

@@ -134,6 +134,7 @@ def process_batches(loader, matcher='lightglue', output_path=None):
                 # Run FLANN matching
                 matches = flann.knnMatch(desc1, desc2, k=2)
                 good = []
+                # Filter matches using the Lowe's ratio test
                 for m, n in matches:
                     if m.distance < 0.7 * n.distance:
                         good.append(m)

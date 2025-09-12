@@ -1,0 +1,39 @@
+%!TEX root = ../report.tex
+\documentclass[report.tex]{subfiles}
+\begin{document}
+    \chapter{Conclusions}
+
+    % \section{Contributions}
+
+    % \section{Lessons learned}
+
+    % \section{Future work}
+
+
+ Our primary contribution is a robust evaluation framework that quantifies cluster quality using both scene-level assignment metrics (Precision, Recall, F1) and established clustering quality indices (Homogeneity, Completeness, V-Measure). This framework allowed for a systematic ablation study, providing insights into the strengths and weaknesses of different method combinations.
+
+\section{Lessons Learned}
+Our primary hypothesis was that the combination of DISK and LightGlue would outperform other methods in terms of accuracy and clustering quality. The experimental results largely supported this, showing DISK + LightGlue and SIFT + LightGlue as the top performers. However, the data reveals a nuanced outcome: while SIFT + LightGlue performed exceptionally well on some datasets and had a slightly higher V-Measure score on average, DISK + LightGlue achieved the best overall F1 score (0.664) and recall (0.598) across all datasets (see Table~\ref{tab:scene-agg-methods}). This suggests that DISK + LightGlue is the most robust and balanced method for both precision and completeness in our evaluation.
+
+The perceived strength of SIFT + LightGlue in some cases might be attributed to the specific characteristics of SIFT. When we restricted keypoints to a maximum of 2048, SIFT may have produced a higher proportion of stable and distinctive keypoints under this constraint. The \texttt{amy\_gardens} dataset highlighted a significant failure mode for all methods: extreme fragmentation into single-image clusters, indicating that regardless of the descriptor or matcher, if a dataset lacks sufficient visual overlap between images, clustering will fail to connect them, the images for this dataset were cluttered and repeatative patterns were found in the images (few sampled images are added in Appendix \ref{appendix:A1}).
+
+The comparison between FLANN and LightGlue was stark. Traditional methods like SIFT with FLANN, while computationally efficient, consistently showed greater scene fragmentation, as evidenced by lower Completeness and V-Measure scores. LightGlue's graph-based approach, which learns a more context-aware matching strategy, was demonstrably better at finding and validating correct matches, leading to significantly higher cluster purity and completeness. The greedy scene-to-cluster assignment strategy proved crucial for obtaining meaningful, interpretable scene-level metrics, addressing the challenge of arbitrary cluster labeling and many-to-many overlaps.
+
+\section{Future Work}
+Building upon this foundation, several avenues for future work can be explored:
+\begin{itemize}
+    \item \textbf{Exploration of Advanced Methods:} Integrate and evaluate more recent state-of-the-art descriptors (e.g., SuperPoint, LoFTR) and clustering algorithms (e.g., graph-based methods, deep clustering).
+    \item \textbf{Scalability and Efficiency:} Investigate methods for improving matching and clustering efficiency on very large datasets, potentially leveraging approximate nearest neighbor search or hierarchical clustering.
+    \item \textbf{Robustness to Challenges:} Extend evaluations to scenarios with significant viewpoint changes, varying lighting conditions, or dynamic content, which pose greater challenges for current methods.
+    \item \textbf{End-to-End System Integration:} Integrate the optimized matching and clustering pipeline into a complete 3D reconstruction or large-scale image retrieval system to validate real-world performance gains.
+\end{itemize}
+
+\section{Contributions}
+The key contributions of this study include:
+\begin{itemize}
+    \item The development and deployment of a modular image matching and clustering pipeline capable of integrating various descriptors and matchers.
+    \item A comprehensive evaluation methodology encompassing both scene-assignment metrics and advanced clustering quality metrics (Homogeneity, Completeness, V-Measure) for a multi-faceted assessment.
+    \item Detailed per-dataset visualizations of scene-cluster overlap, offering a qualitative understanding of cluster purity, fragmentation, and inter-scene mixing.
+\end{itemize}
+
+\end{document}

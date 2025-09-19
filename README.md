@@ -58,39 +58,28 @@ To extract features (e.g., DISK or SIFT) from your images, you can use the `batc
 
 Example:
 ```python
-# from data_preprocess.image_matching_dataset import ImageMatchingDataset # Example dataset
-# from torch.utils.data import DataLoader
-# dataset = ImageMatchingDataset(image_paths, ...)
-# loader = DataLoader(dataset, batch_size=1)
-# batch_feature_descriptor(loader, device, "disk", "evaluation/disk_descriptors_outputs/")
+from data_preprocess.image_matching_dataset import ImageMatchingDataset # Example dataset
+from torch.utils.data import DataLoader
+dataset = ImageMatchingDataset(image_paths, ...)
+loader = DataLoader(dataset, batch_size=1)
+batch_feature_descriptor(loader, device, "disk", "evaluation/disk_descriptors_outputs/")
 ```
 
 ### 2. Feature Matching
 
-After extracting features, you can match them between image pairs using `batch_matcher.py`.
+After extracting features, you can match them between image pairs using `batch_matcher.py`. This requires a csv containing pair of images, their image paths and we also load the descriptor files which have the descriptors and keypoints and then load it via Dataloader to match it via FLANN or LightGlue.
 
-Example:
-```python
-# from batch_matcher import batch_match_features
-# # Assuming 'dataset' is a pandas DataFrame with image paths
-# batch_match_features(dataset, "lightglue", "disk", cuda=True)
-```
+**Note:** There are several demo files available that have the snippets for running the pipeline for each combination of descriptors and matchers for the whole dataset. For some idiotic reasons, some of the code is only available in the feature branch __evaluation_feature__ , so use that branch for running LightGlue and DISK. But seperate `.ipynb` files are available for each combination for demo run.
+
 
 ### 3. Clustering
 
-Clustering typically follows feature matching. The `clustering/cluster_images.py` would be used for this step, generating cluster JSON files.
+Clustering follows feature matching. The `clustering/cluster_images.py` would be used for this step, generating cluster JSON files.
 
 ### 4. Evaluation
 
-To evaluate the generated clusters, use the `evaluation/eval.py` script. It takes the cluster JSON file and a labels CSV file as input.
+To evaluate the generated clusters, use the `evaluation/eval.py` script and the snippets in image_matching.ipynb. It takes the cluster JSON file and a labels CSV file as input.
 
-Example:
-```python
-# from evaluation.eval import run_comprehensive_evaluation
-# clusters_json_path = "evaluation/clusters/clusters_lightglue_with_disk.json"
-# labels_path = "data/train_labels.csv" # Assuming this path, adjust as needed
-# run_comprehensive_evaluation(clusters_json_path, labels_path)
-```
 
 ## Contributing
 
